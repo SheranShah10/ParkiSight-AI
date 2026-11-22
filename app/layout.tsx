@@ -32,6 +32,23 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var origSetAttr = Element.prototype.setAttribute;
+                  Element.prototype.setAttribute = function(name, val) {
+                    if (name && (name === 'bis_skin_checked' || name.indexOf('bis_') === 0 || name.indexOf('__processed_') === 0)) {
+                      return;
+                    }
+                    return origSetAttr.apply(this, arguments);
+                  };
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       <body suppressHydrationWarning>{children}</body>
     </html>
