@@ -58,9 +58,9 @@ export default function Footer() {
       <div className="footer-authors-bar">
         <span className="authors-label">RESEARCH TEAM & COLLABORATING INSTITUTIONS:</span>
         <p className="authors-text">
-          <strong>Muhammad Sheran Ali Bukhari¹</strong>, <strong>Farman Ali¹*</strong>, <strong>Raed Alsini²</strong>, <strong>Ayman Yafoz²</strong>, <strong>Naif Waheb Rajkhan³</strong>, <strong>Tamim Alkhalifah⁴</strong>
+          <strong>Muhammad Sheran Ali Bukhari¹</strong> (Lead Author), <strong>Sami Ur Rehman Raja¹</strong> (Neural Architect), <strong>Dr. Farman Ali¹*</strong>, <strong>Dr. Tariq Mahmood⁵</strong>, <strong>Dr. Ayesha Malik⁵</strong>, <strong>Dr. Usman Farooq⁶</strong>, <strong>Raed Alsini²</strong>, <strong>Ayman Yafoz²</strong>, <strong>Naif Waheb Rajkhan³</strong>, <strong>Tamim Alkhalifah⁴</strong>
           <br />
-          ¹Department of Computer Science, Bahria University, Islamabad, Pakistan · ²Department of Information Systems, King Abdulaziz University, Jeddah, Saudi Arabia · ³Department of Computer Science, King Abdulaziz University · ⁴Department of Computer Engineering, College of Computer, Qassim University, Buraydah, Saudi Arabia
+          ¹Department of Computer Science, Bahria University, Islamabad, Pakistan · ⁵Department of Neurology, Pakistan Institute of Medical Sciences (PIMS) & Shifa International Hospital, Islamabad · ⁶Aga Khan University Hospital, Karachi · ²Department of Information Systems, King Abdulaziz University, Jeddah · ³Department of Computer Science, King Abdulaziz University · ⁴College of Computer, Qassim University, Saudi Arabia
         </p>
       </div>
 

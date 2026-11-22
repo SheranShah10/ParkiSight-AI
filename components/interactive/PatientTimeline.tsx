@@ -103,7 +103,7 @@ export default function PatientTimeline() {
           <h3 className="journey-title">Trajectory Over 36 Months of Disease Progression</h3>
         </div>
         <div className="de-id-badge">
-          <ShieldCheck size={14} /> DE-IDENTIFIED RESEARCH COHORT (PATNO-3401)
+          <ShieldCheck size={14} /> DE-IDENTIFIED RESEARCH COHORT (PATNO-3401 · Tariq M., 62y)
         </div>
       </div>
 

@@ -31,8 +31,8 @@ const ROLES = [
 export default function AuthPage() {
   const [selectedRole, setSelectedRole] = useState(ROLES[0].id);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
-  const [fullName, setFullName] = useState('Dr. Alex Morgan');
-  const [institution, setInstitution] = useState('Movement Disorder Center');
+  const [fullName, setFullName] = useState('Dr. Tariq Mahmood');
+  const [institution, setInstitution] = useState('Pakistan Institute of Medical Sciences (PIMS) / Shifa International');
 
   return (
     <main className="neural-auth-page" suppressHydrationWarning>
@@ -149,7 +149,7 @@ export default function AuthPage() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. Dr. Alex Morgan"
+                placeholder="e.g. Dr. Tariq Mahmood, Muhammad Sheran, or Sami Ur Rehman"
               />
             </label>
 
