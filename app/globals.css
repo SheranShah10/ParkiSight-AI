@@ -60,9 +60,12 @@ html {
   color: var(--text-dark);
 }
 
+html,
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  max-width: 100vw;
   font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.6;
@@ -5043,19 +5046,183 @@ input, select, textarea {
   .task-banner-content {
     grid-template-columns: 1fr;
   }
-  .journal-table .table-row {
-    grid-template-columns: 1.4fr 1fr 1fr;
-    font-size: 11px;
+
+  /* Full Multi-Model Comparator Table on Mobile */
+  .comparator-table-panel {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
-  .journal-table .table-row span:nth-child(4),
-  .journal-table .table-row span:nth-child(5) {
+  .journal-table {
+    min-width: 580px;
+  }
+  .journal-table .table-row {
+    grid-template-columns: 1.6fr 1.2fr 1fr 1fr 0.8fr;
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+
+  /* STROBE Cohort Diagram Mobile Flow */
+  .strobe-connector {
+    position: static;
+    height: auto;
+    margin: 12px 0;
+  }
+  .connector-line, .branch-line {
     display: none;
+  }
+  .exclusion-branch {
+    position: static;
+    width: 100%;
+    margin: 8px 0;
+  }
+  .exclusion-box {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .part-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .part-segment {
+    font-size: 8.5px;
+  }
+
+  /* Dual Explainability Workstation on Mobile */
+  .workstation-topline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .slice-buttons {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .slice-buttons button {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  .sbr-readout-strip {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .gradcam-controls-strip {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  /* Dashboard Workstation Mobile Optimization */
+  .ws-topbar {
+    padding: 0 12px;
+    height: 56px;
+  }
+  .topbar-actions {
+    gap: 8px;
+  }
+  .research-status-pill {
+    display: none;
+  }
+  .role-selector-dropdown {
+    font-size: 11px;
+    padding: 4px 8px;
+    max-width: 130px;
+  }
+  .topbar-breadcrumb {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 110px;
+  }
+  .ws-content {
+    padding: 16px 12px;
+  }
+  .ws-panel {
+    padding: 18px 14px;
+  }
+  .sliders-dual-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .biomarker-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .trajectory-horizons-strip {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .calc-arms-comparison {
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+  .arm-arrow {
+    transform: rotate(90deg);
+  }
+  .benchmark-tabs-row {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+  }
+  .benchmark-tabs-row::-webkit-scrollbar {
+    display: none;
+  }
+  .bm-tab-btn {
+    flex-shrink: 0;
+  }
+
+  /* Auth Page Mobile Optimization */
+  .auth-form-col {
+    padding: 32px 18px;
+  }
+  .auth-editorial-col {
+    padding: 28px 18px;
+    min-height: auto;
+  }
+
+  /* Footer Mobile */
+  .neural-footer {
+    padding: 48px 16px 24px;
+  }
+
+  /* Scan Comparison Tab Pills */
+  .tab-pills {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Radar SVG responsiveness */
+  .radar-svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .radar-chart-wrap {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Spiral Canvas Touch Action */
+  .spiral-interactive-canvas {
+    touch-action: none;
+  }
+
+  /* Missingness Matrix Slider Endpoints */
+  .slider-endpoints {
+    flex-wrap: wrap;
+    gap: 4px;
   }
 }
 
 @media (max-width: 480px) {
   .hero-display-heading {
-    font-size: 32px;
+    font-size: 28px;
   }
   .demo-launch-btn span {
     display: none;
@@ -5065,6 +5232,25 @@ input, select, textarea {
   }
   .inspect-metrics-grid {
     grid-template-columns: 1fr;
+  }
+  .stage-hero-metric {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .stage-name {
+    font-size: 24px;
+  }
+  .topbar-breadcrumb {
+    display: none;
+  }
+  .swedd-modal-backdrop {
+    padding: 12px;
+  }
+  .swedd-modal {
+    padding: 20px 14px;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 }
 
@@ -5794,6 +5980,26 @@ html[data-theme="light"] .neural-header {
 html[data-theme="light"] .neural-header.is-scrolled {
   background: rgba(244, 242, 236, 0.98);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .mobile-drawer {
+  background: rgba(244, 242, 236, 0.98);
+}
+
+html[data-theme="light"] .drawer-links a {
+  color: #1A211F;
+}
+
+html[data-theme="light"] .drawer-links a:hover {
+  color: var(--signal-orange);
+}
+
+html[data-theme="light"] .drawer-links a b {
+  color: #55635E;
+}
+
+html[data-theme="light"] .mobile-drawer .drawer-footnote {
+  color: #71807A;
 }
 
 html[data-theme="light"] .nav-link {
