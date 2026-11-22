@@ -63,7 +63,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="neural-archive-root">
+    <div className="neural-archive-root" suppressHydrationWarning>
       {/* Global Grain Texture Overlay */}
       <div className="subtle-grain" aria-hidden="true" />
 

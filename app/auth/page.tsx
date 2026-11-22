@@ -35,7 +35,7 @@ export default function AuthPage() {
   const [institution, setInstitution] = useState('Movement Disorder Center');
 
   return (
-    <main className="neural-auth-page">
+    <main className="neural-auth-page" suppressHydrationWarning>
       {/* Left Column: Restrained Editorial Scientific Artwork */}
       <div className="auth-editorial-col">
         <div className="auth-brand-strip">

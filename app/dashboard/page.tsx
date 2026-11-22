@@ -288,7 +288,7 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="ws-dashboard-root">
+    <main className="ws-dashboard-root" suppressHydrationWarning>
       {/* Sidebar Navigation */}
       <aside className={`ws-sidebar ${mobileMenu ? 'is-open' : ''}`}>
         <div className="sidebar-brand-box">
