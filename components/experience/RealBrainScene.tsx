@@ -286,7 +286,7 @@ function SlicePlaneOverlay({ mode, visible }: { mode: SliceMode; visible: boolea
 }
 
 /* -------------------------------------------------------------------------- */
-/* Unified Camera Rig Controller: Frames FULL Anatomical Brain Elegantly      */
+/* Responsive Camera Rig Controller with Portrait / Mobile Viewport Tuning   */
 /* -------------------------------------------------------------------------- */
 function CameraRigController({
   focus,
@@ -295,29 +295,34 @@ function CameraRigController({
   focus: AnatomyFocus;
   progress: number;
 }) {
-  const { camera } = useThree();
+  const { camera, size } = useThree();
 
   useFrame((_, delta) => {
-    let targetPos = new THREE.Vector3(2.5, 1.4, 4.4);
+    // Dynamic responsive zoom compensation for portrait viewports (mobile phones)
+    // Three.js vertical FOV cuts off sides on portrait aspect ratios (aspect < 1)
+    const aspect = size.width / Math.max(size.height, 1);
+    const zoomComp = aspect < 1.0 ? Math.min(1.45, 1.05 / Math.max(0.65, aspect)) : 1.0;
+
+    let targetPos = new THREE.Vector3(2.5 * zoomComp, 1.4 * zoomComp, 4.4 * zoomComp);
     let targetLook = new THREE.Vector3(0, 0.05, 0);
 
     if (focus === 'striatum') {
-      targetPos = new THREE.Vector3(1.8, 1.1, 2.5);
+      targetPos = new THREE.Vector3(1.8 * zoomComp, 1.1 * zoomComp, 2.5 * zoomComp);
       targetLook = new THREE.Vector3(0.2, 0.15, 0.1);
     } else if (focus === 'caudate') {
-      targetPos = new THREE.Vector3(1.4, 0.9, 1.8);
+      targetPos = new THREE.Vector3(1.4 * zoomComp, 0.9 * zoomComp, 1.8 * zoomComp);
       targetLook = new THREE.Vector3(0.3, 0.3, 0.2);
     } else if (focus === 'putamen') {
-      targetPos = new THREE.Vector3(1.9, 0.7, 1.6);
+      targetPos = new THREE.Vector3(1.9 * zoomComp, 0.7 * zoomComp, 1.6 * zoomComp);
       targetLook = new THREE.Vector3(0.55, 0.15, 0.1);
     } else if (focus === 'cross-section') {
-      targetPos = new THREE.Vector3(2.6, 1.8, 3.2);
+      targetPos = new THREE.Vector3(2.6 * zoomComp, 1.8 * zoomComp, 3.2 * zoomComp);
       targetLook = new THREE.Vector3(0, 0.1, 0);
     } else {
       // Elevated 3/4 anatomical perspective framing the WHOLE brain centered
       const yaw = 0.52 + Math.sin(progress * Math.PI) * 0.45;
-      const pitch = 1.35 + Math.cos(progress * Math.PI * 1.5) * 0.25;
-      const dist = 5.2;
+      const pitch = (1.35 + Math.cos(progress * Math.PI * 1.5) * 0.25) * zoomComp;
+      const dist = 5.2 * zoomComp;
       targetPos = new THREE.Vector3(
         Math.sin(yaw) * dist,
         pitch,
@@ -663,6 +668,10 @@ export default function RealBrainScene({
             target={[0, 0.05, 0]}
             maxPolarAngle={Math.PI / 1.7}
             minPolarAngle={Math.PI / 3.4}
+            touches={{
+              ONE: THREE.TOUCH.ROTATE,
+              TWO: THREE.TOUCH.DOLLY_PAN,
+            }}
           />
         </Canvas>
       ) : (

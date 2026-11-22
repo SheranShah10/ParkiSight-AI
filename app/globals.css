@@ -4810,13 +4810,29 @@ input, select, textarea {
 }
 
 @media (max-width: 768px) {
+  /* Navigation & Header */
+  .header-inner {
+    padding: 0 16px;
+  }
   .header-nav {
     display: none;
+  }
+  .brand-badge {
+    display: none;
+  }
+  .auth-link {
+    display: none;
+  }
+  .demo-launch-btn {
+    padding: 7px 12px;
+    font-size: 11px;
   }
   .mobile-toggle-btn {
     display: block;
     color: var(--text-dark);
   }
+
+  /* Scientific Workstation Sidebar */
   .ws-sidebar {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -4836,8 +4852,149 @@ input, select, textarea {
   .mobile-hamburger-btn {
     display: block;
   }
+
+  /* Editorial Layouts & Padding */
+  .scene-hero {
+    min-height: auto;
+    padding-top: 84px;
+    padding-bottom: 36px;
+  }
+  .hero-editorial-col {
+    padding-right: 0;
+  }
+  .hero-display-heading {
+    font-size: clamp(34px, 7.5vw, 56px);
+  }
+  .editorial-container {
+    padding: 0 16px;
+  }
+  .scene-editorial {
+    padding: 56px 0;
+  }
+
+  /* 3D Brain Canvas Frame & Controls */
   .canvas-frame {
-    height: 460px;
+    height: 520px;
+    border-radius: var(--radius-sm);
+  }
+  .canvas-top-hud {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+  .hud-coord {
+    display: none;
+  }
+  .dossier-toggle-pill {
+    top: 44px;
+    left: 12px;
+    padding: 5px 10px;
+    font-size: 9px;
+  }
+  .brain-view-mode-pill {
+    top: 44px;
+    right: 12px;
+    padding: 2px 4px;
+    gap: 3px;
+  }
+  .view-mode-btn {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+  .explore-striatum-trigger {
+    top: auto;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 24px);
+    max-width: 320px;
+    justify-content: center;
+    font-size: 9px;
+    padding: 7px 12px;
+  }
+  .roi-floating-hud {
+    top: auto;
+    bottom: 110px;
+    left: 10px;
+    right: 10px;
+    max-width: none;
+    max-height: 230px;
+    overflow-y: auto;
+    padding: 10px 12px;
+  }
+  .canvas-bottom-hud {
+    bottom: 60px;
+    left: 12px;
+    right: 12px;
+  }
+  .canvas-bottom-hud .hud-left small {
+    display: none;
+  }
+  .spect-toggle-pill {
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  /* Anatomy Inspector Horizontal Scrolling Bar */
+  .anatomy-inspector-bar {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    height: 44px;
+    padding: 0 8px;
+    gap: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .anatomy-inspector-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .anatomy-targets, .slice-selectors, .inspector-actions {
+    flex-shrink: 0;
+    gap: 5px;
+  }
+  .inspector-label {
+    display: none;
+  }
+  .inspector-btn, .slice-btn, .datscan-transition-btn, .toggle-labels-btn, .reset-btn {
+    flex-shrink: 0;
+    padding: 4px 8px;
+    font-size: 10px;
+    height: 30px;
+  }
+
+  /* Interactive Cards & Grids */
+  .scan-comparison-card,
+  .missingness-matrix-container,
+  .strobe-cohort-container,
+  .evidence-explorer-container,
+  .explainability-card {
+    padding: 20px 14px;
+  }
+  .comparison-header,
+  .cohort-header,
+  .evidence-header,
+  .matrix-topline {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .split-viewport {
+    height: 280px;
+  }
+  .matrix-grid-display {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px;
+    gap: 6px;
+    scrollbar-width: thin;
+  }
+  .matrix-grid-display > * {
+    flex: 0 0 14px;
   }
   .hero-metrics-ribbon {
     grid-template-columns: 1fr;
@@ -4872,6 +5029,21 @@ input, select, textarea {
   .journal-table .table-row span:nth-child(4),
   .journal-table .table-row span:nth-child(5) {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-display-heading {
+    font-size: 32px;
+  }
+  .demo-launch-btn span {
+    display: none;
+  }
+  .canvas-frame {
+    height: 480px;
+  }
+  .inspect-metrics-grid {
+    grid-template-columns: 1fr;
   }
 }
 
