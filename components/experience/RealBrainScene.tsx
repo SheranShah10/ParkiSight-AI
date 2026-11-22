@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { Scan, Layers, Info, Sparkles, Scissors, ArrowDown, Eye, CheckCircle2 } from 'lucide-react';
+import { Scan, Layers, Info, Sparkles, Scissors, ArrowDown, X } from 'lucide-react';
 import type { AnatomyFocus, SliceMode } from '@/lib/types';
 
 type BrainSceneProps = {
@@ -42,10 +42,10 @@ function AuthenticAnatomicalBrain({
   const clippingPlanes = useMemo(() => {
     if (!isCrossSection) return [];
     if (sliceMode === 'axial') {
-      return [new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.28)];
+      return [new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.22)];
     }
     if (sliceMode === 'coronal') {
-      return [new THREE.Plane(new THREE.Vector3(0, 0, -1), 0.18)];
+      return [new THREE.Plane(new THREE.Vector3(0, 0, -1), 0.15)];
     }
     return [new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0.05)];
   }, [isCrossSection, sliceMode]);
@@ -64,15 +64,15 @@ function AuthenticAnatomicalBrain({
         mesh.receiveShadow = true;
 
         mesh.material = new THREE.MeshPhysicalMaterial({
-          color: isOverview ? '#94aaa1' : isCrossSection ? '#a4bbb2' : '#526963',
-          roughness: isOverview ? 0.45 : 0.35,
+          color: isOverview ? '#9cb0a7' : isCrossSection ? '#a8bbb3' : '#526963',
+          roughness: isOverview ? 0.46 : 0.35,
           metalness: 0.05,
-          transmission: isOverview ? 0.2 : isStriatum ? 0.88 : isTargeted ? 0.92 : 0.18,
-          thickness: isOverview ? 0.75 : 0.25,
-          transparent: true,
-          opacity: isOverview ? 0.95 : isStriatum ? 0.26 : isTargeted ? 0.2 : 0.9,
+          transmission: isOverview ? 0.0 : isStriatum ? 0.88 : isTargeted ? 0.92 : 0.18,
+          thickness: isOverview ? 0.0 : 0.25,
+          transparent: !isOverview,
+          opacity: isOverview ? 1.0 : isStriatum ? 0.25 : isTargeted ? 0.2 : 0.9,
           clearcoat: 0.35,
-          clearcoatRoughness: 0.22,
+          clearcoatRoughness: 0.25,
           clippingPlanes: clippingPlanes,
           clipShadows: true,
           depthWrite: isOverview || isCrossSection,
@@ -85,8 +85,8 @@ function AuthenticAnatomicalBrain({
     <primitive
       ref={brainRef}
       object={scene}
-      scale={[0.022, 0.022, 0.022]}
-      position={[0, -0.15, 0.2]}
+      scale={[0.017, 0.017, 0.017]}
+      position={[0, -0.05, 0.05]}
       rotation={[0, 0, 0]}
     />
   );
@@ -96,33 +96,32 @@ function AuthenticAnatomicalBrain({
 /* Subcortical Thalamic Nuclear Bed (Anatomical Landmark for Basal Ganglia)    */
 /* -------------------------------------------------------------------------- */
 function AnatomicalThalamus({ focused }: { focused: AnatomyFocus }) {
-  const isOverview = focused === 'overview';
   const isBasalActive = focused === 'striatum' || focused === 'caudate' || focused === 'putamen';
 
   const thalamusGeo = useMemo(() => {
-    const geo = new THREE.SphereGeometry(0.38, 28, 28);
-    geo.scale(1.0, 0.85, 1.45); // Egg-shaped thalamic nuclear complex
+    const geo = new THREE.SphereGeometry(0.32, 28, 28);
+    geo.scale(1.0, 0.85, 1.4); // Egg-shaped thalamic nuclear complex
     return geo;
   }, []);
 
   return (
-    <group position={[0, 0.28, -0.05]}>
+    <group position={[0, 0.22, -0.05]}>
       {/* Left Thalamus */}
-      <mesh position={[-0.38, 0, 0]} rotation={[0.1, 0.15, -0.05]} geometry={thalamusGeo}>
+      <mesh position={[-0.32, 0, 0]} rotation={[0.1, 0.15, -0.05]} geometry={thalamusGeo}>
         <meshPhysicalMaterial
           color="#657b75"
           roughness={0.52}
           transparent
-          opacity={isOverview ? 0.4 : isBasalActive ? 0.65 : 0.35}
+          opacity={isBasalActive ? 0.65 : 0.35}
         />
       </mesh>
       {/* Right Thalamus */}
-      <mesh position={[0.38, 0, 0]} rotation={[0.1, -0.15, 0.05]} geometry={thalamusGeo}>
+      <mesh position={[0.32, 0, 0]} rotation={[0.1, -0.15, 0.05]} geometry={thalamusGeo}>
         <meshPhysicalMaterial
           color="#657b75"
           roughness={0.52}
           transparent
-          opacity={isOverview ? 0.4 : isBasalActive ? 0.65 : 0.35}
+          opacity={isBasalActive ? 0.65 : 0.35}
         />
       </mesh>
     </group>
@@ -144,19 +143,19 @@ function AnatomicalCaudate({
   const sign = side === 'left' ? -1 : 1;
   const meshRef = useRef<THREE.Mesh>(null);
 
-  // Stereotactic C-curve bordering the lateral ventricle anterior horn & body
+  // Stereotactic C-curve scaled to sit inside the authentic ventricles
   const curve = useMemo(() => {
     const points = [
-      new THREE.Vector3(sign * 0.36, 0.44, 0.78), // Caput (Anterior head)
-      new THREE.Vector3(sign * 0.52, 0.74, 0.32), // Genu / Superior arch
-      new THREE.Vector3(sign * 0.62, 0.54, -0.38), // Corpus descending
-      new THREE.Vector3(sign * 0.52, 0.12, -0.76), // Cauda (inferior tail)
+      new THREE.Vector3(sign * 0.28, 0.38, 0.55), // Caput (Anterior head)
+      new THREE.Vector3(sign * 0.42, 0.62, 0.22), // Genu / Superior arch
+      new THREE.Vector3(sign * 0.48, 0.45, -0.28), // Corpus descending
+      new THREE.Vector3(sign * 0.42, 0.12, -0.55), // Cauda (inferior tail)
     ];
     return new THREE.CatmullRomCurve3(points);
   }, [sign]);
 
   const geometry = useMemo(() => {
-    return new THREE.TubeGeometry(curve, 54, 0.165, 24, false);
+    return new THREE.TubeGeometry(curve, 48, 0.13, 20, false);
   }, [curve]);
 
   useFrame((state) => {
@@ -208,21 +207,21 @@ function AnatomicalPutamen({
   const meshRef = useRef<THREE.Mesh>(null);
 
   const geometry = useMemo(() => {
-    const geo = new THREE.SphereGeometry(0.41, 38, 38);
-    geo.scale(1.24, 0.96, 1.74); // Biconvex anatomical lens
+    const geo = new THREE.SphereGeometry(0.32, 32, 32);
+    geo.scale(1.2, 0.92, 1.6); // Biconvex anatomical lens
     return geo;
   }, []);
 
   useFrame((state) => {
     if (active && meshRef.current) {
       const pulse = 1 + Math.sin(state.clock.elapsedTime * 3.5 + 0.5) * 0.05;
-      meshRef.current.scale.set(1.24 * pulse, 0.96 * pulse, 1.74 * pulse);
+      meshRef.current.scale.set(1.2 * pulse, 0.92 * pulse, 1.6 * pulse);
     }
   });
 
   return (
     <group
-      position={[sign * 0.86, 0.24, 0.16]}
+      position={[sign * 0.54, 0.18, 0.12]}
       rotation={[0.12, -sign * 0.22, 0.14]}
       onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
@@ -258,18 +257,18 @@ function SlicePlaneOverlay({ mode, visible }: { mode: SliceMode; visible: boolea
 
   const { position, rotation } = useMemo(() => {
     if (mode === 'axial') {
-      return { position: [0, 0.28, 0] as [number, number, number], rotation: [-Math.PI / 2, 0, 0] as [number, number, number] };
+      return { position: [0, 0.22, 0] as [number, number, number], rotation: [-Math.PI / 2, 0, 0] as [number, number, number] };
     }
     if (mode === 'coronal') {
-      return { position: [0, 0.2, 0.18] as [number, number, number], rotation: [0, 0, 0] as [number, number, number] };
+      return { position: [0, 0.15, 0.15] as [number, number, number], rotation: [0, 0, 0] as [number, number, number] };
     }
-    return { position: [0.05, 0.2, 0] as [number, number, number], rotation: [0, Math.PI / 2, 0] as [number, number, number] };
+    return { position: [0.05, 0.15, 0] as [number, number, number], rotation: [0, Math.PI / 2, 0] as [number, number, number] };
   }, [mode]);
 
   return (
     <group position={position} rotation={rotation}>
       <mesh>
-        <planeGeometry args={[4.4, 4.4]} />
+        <planeGeometry args={[3.8, 3.8]} />
         <meshBasicMaterial
           color="#38A892"
           transparent
@@ -279,7 +278,7 @@ function SlicePlaneOverlay({ mode, visible }: { mode: SliceMode; visible: boolea
         />
       </mesh>
       <lineSegments>
-        <edgesGeometry args={[new THREE.PlaneGeometry(4.4, 4.4)]} />
+        <edgesGeometry args={[new THREE.PlaneGeometry(3.8, 3.8)]} />
         <lineBasicMaterial color="#55E6CC" transparent opacity={0.65} />
       </lineSegments>
     </group>
@@ -287,7 +286,7 @@ function SlicePlaneOverlay({ mode, visible }: { mode: SliceMode; visible: boolea
 }
 
 /* -------------------------------------------------------------------------- */
-/* Unified Camera Rig Controller with Smooth Interpolation                    */
+/* Unified Camera Rig Controller: Frames FULL Anatomical Brain Elegantly      */
 /* -------------------------------------------------------------------------- */
 function CameraRigController({
   focus,
@@ -299,29 +298,32 @@ function CameraRigController({
   const { camera } = useThree();
 
   useFrame((_, delta) => {
-    let targetPos = new THREE.Vector3(3.4, 1.8, 4.8);
-    let targetLook = new THREE.Vector3(0, 0, 0);
+    let targetPos = new THREE.Vector3(2.5, 1.4, 4.4);
+    let targetLook = new THREE.Vector3(0, 0.05, 0);
 
     if (focus === 'striatum') {
-      targetPos = new THREE.Vector3(2.3, 1.3, 3.1);
-      targetLook = new THREE.Vector3(0.4, 0.32, 0.2);
+      targetPos = new THREE.Vector3(1.8, 1.1, 2.5);
+      targetLook = new THREE.Vector3(0.2, 0.15, 0.1);
     } else if (focus === 'caudate') {
-      targetPos = new THREE.Vector3(1.8, 1.25, 2.3);
-      targetLook = new THREE.Vector3(0.42, 0.44, 0.35);
+      targetPos = new THREE.Vector3(1.4, 0.9, 1.8);
+      targetLook = new THREE.Vector3(0.3, 0.3, 0.2);
     } else if (focus === 'putamen') {
-      targetPos = new THREE.Vector3(2.4, 0.95, 2.0);
-      targetLook = new THREE.Vector3(0.82, 0.22, 0.16);
+      targetPos = new THREE.Vector3(1.9, 0.7, 1.6);
+      targetLook = new THREE.Vector3(0.55, 0.15, 0.1);
     } else if (focus === 'cross-section') {
-      targetPos = new THREE.Vector3(3.2, 2.4, 3.8);
-      targetLook = new THREE.Vector3(0, 0.15, 0);
+      targetPos = new THREE.Vector3(2.6, 1.8, 3.2);
+      targetLook = new THREE.Vector3(0, 0.1, 0);
     } else {
-      const yaw = Math.sin(progress * Math.PI) * 0.75;
-      const pitch = 1.35 + Math.cos(progress * Math.PI * 1.5) * 0.38;
+      // Elevated 3/4 anatomical perspective framing the WHOLE brain centered
+      const yaw = 0.52 + Math.sin(progress * Math.PI) * 0.45;
+      const pitch = 1.35 + Math.cos(progress * Math.PI * 1.5) * 0.25;
+      const dist = 5.2;
       targetPos = new THREE.Vector3(
-        Math.cos(yaw) * 4.3 + Math.sin(progress * 2) * 0.35,
+        Math.sin(yaw) * dist,
         pitch,
-        Math.sin(yaw) * 4.3 + 1.2
+        Math.cos(yaw) * dist
       );
+      targetLook = new THREE.Vector3(0, 0.05, 0);
     }
 
     camera.position.lerp(targetPos, Math.min(1, delta * 3.6));
@@ -347,6 +349,8 @@ export default function RealBrainScene({
   const [hasWebGL, setHasWebGL] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [viewMode, setViewMode] = useState<'3d' | 'atlas'>('3d');
+  // Text box dossier is hidden by default per user request, toggled via button
+  const [showDossier, setShowDossier] = useState(false);
 
   useEffect(() => {
     try {
@@ -364,11 +368,32 @@ export default function RealBrainScene({
     return () => query.removeEventListener('change', updateMotion);
   }, []);
 
+  // When user actively focuses a specific structure, contextually open the dossier
+  useEffect(() => {
+    if (focus !== 'overview') {
+      setShowDossier(true);
+    }
+  }, [focus]);
+
   const isCrossSection = focus === 'cross-section';
+  const isInternalActive = focus !== 'overview';
 
   return (
     <div className="canvas-wrapper" style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {/* View Mode Switcher Pill (3D Interactive vs Authentic Medical Atlas) */}
+      {/* Top Left: Dossier Toggle Pill Button */}
+      {viewMode === '3d' && labelsOn && (
+        <button
+          type="button"
+          className={`dossier-toggle-pill ${showDossier ? 'is-active' : ''}`}
+          onClick={() => setShowDossier(!showDossier)}
+          title={showDossier ? 'Hide anatomical details' : 'Show anatomical details & MNI coordinates'}
+        >
+          <Info size={12} />
+          <span>{showDossier ? 'HIDE DOSSIER' : 'ANATOMICAL DOSSIER'}</span>
+        </button>
+      )}
+
+      {/* Top Right: View Mode Switcher (3D Orbit vs Medical Atlas) */}
       <div className="brain-view-mode-pill">
         <button
           type="button"
@@ -388,12 +413,15 @@ export default function RealBrainScene({
         </button>
       </div>
 
-      {/* Signature Interaction Callout: "Explore the Striatum" (In Overview mode) */}
+      {/* Signature Interaction Callout: "Explore the Striatum" (Only in Overview mode) */}
       {viewMode === '3d' && focus === 'overview' && (
         <button
           type="button"
           className="explore-striatum-trigger"
-          onClick={() => onSelectAnatomy?.('striatum')}
+          onClick={() => {
+            onSelectAnatomy?.('striatum');
+            setShowDossier(true);
+          }}
           title="Zoom inside the brain to reveal the basal ganglia"
         >
           <Sparkles size={12} className="spin-slow" />
@@ -402,14 +430,24 @@ export default function RealBrainScene({
         </button>
       )}
 
-      {/* Floating 2D HUD Card for Stereotaxic ROI */}
-      {labelsOn && (
+      {/* Floating 2D HUD Card for Stereotaxic ROI (Hidden by default, shown on click) */}
+      {showDossier && labelsOn && (
         <div className={`roi-floating-hud ${focus !== 'overview' ? 'is-focused' : ''}`}>
           {focus === 'overview' && (
             <>
               <div className="roi-hud-header">
                 <span className="roi-badge overview">NIH 3D MNI ANATOMICAL MESH</span>
-                <span className="roi-mni">215,899 Vertices</span>
+                <div className="roi-header-actions">
+                  <span className="roi-mni">215,899 Vertices</span>
+                  <button
+                    type="button"
+                    className="roi-close-btn"
+                    onClick={() => setShowDossier(false)}
+                    aria-label="Close dossier"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
               </div>
               <div className="roi-hud-title">Authentic Cerebral Cortex & Deep Striatum</div>
               <div className="roi-hud-desc">
@@ -426,7 +464,17 @@ export default function RealBrainScene({
             <>
               <div className="roi-hud-header">
                 <span className="roi-badge striatum">DEEP BASAL GANGLIA</span>
-                <span className="roi-mni">Striatal Subcortex</span>
+                <div className="roi-header-actions">
+                  <span className="roi-mni">Striatal Subcortex</span>
+                  <button
+                    type="button"
+                    className="roi-close-btn"
+                    onClick={() => setShowDossier(false)}
+                    aria-label="Close dossier"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
               </div>
               <div className="roi-hud-title">The Striatum (Caudate & Putamen)</div>
               <div className="roi-hud-desc">
@@ -443,7 +491,17 @@ export default function RealBrainScene({
             <>
               <div className="roi-hud-header">
                 <span className="roi-badge caudate">STEREOTAXIC ROI</span>
-                <span className="roi-mni">MNI (±14, +10, +8) mm</span>
+                <div className="roi-header-actions">
+                  <span className="roi-mni">MNI (±14, +10, +8) mm</span>
+                  <button
+                    type="button"
+                    className="roi-close-btn"
+                    onClick={() => setShowDossier(false)}
+                    aria-label="Close dossier"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
               </div>
               <div className="roi-hud-title">Caput, Corpus & Cauda Nuclei Caudati</div>
               <div className="roi-hud-desc">
@@ -451,7 +509,7 @@ export default function RealBrainScene({
               </div>
               <div className="roi-hud-meta">
                 <span>Volume: ~3,240 mm³</span>
-                <span className="roi-highlight-green">Baseline SBR: 2.48 (Relative Preservation)</span>
+                <span className="roi-highlight-green">Baseline SBR: 2.48 (Preserved)</span>
               </div>
             </>
           )}
@@ -460,7 +518,17 @@ export default function RealBrainScene({
             <>
               <div className="roi-hud-header">
                 <span className="roi-badge putamen">PRIMARY PD DEFICIT ROI</span>
-                <span className="roi-mni">MNI (±26, +2, +1) mm</span>
+                <div className="roi-header-actions">
+                  <span className="roi-mni">MNI (±26, +2, +1) mm</span>
+                  <button
+                    type="button"
+                    className="roi-close-btn"
+                    onClick={() => setShowDossier(false)}
+                    aria-label="Close dossier"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
               </div>
               <div className="roi-hud-title">Putamen (Lentiform Nucleus)</div>
               <div className="roi-hud-desc">
@@ -477,7 +545,17 @@ export default function RealBrainScene({
             <>
               <div className="roi-hud-header">
                 <span className="roi-badge cross-section">ANATOMICAL CUTAWAY</span>
-                <span className="roi-mni">{sliceMode.toUpperCase()} PLANE</span>
+                <div className="roi-header-actions">
+                  <span className="roi-mni">{sliceMode.toUpperCase()} PLANE</span>
+                  <button
+                    type="button"
+                    className="roi-close-btn"
+                    onClick={() => setShowDossier(false)}
+                    aria-label="Close dossier"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
               </div>
               <div className="roi-hud-title">Radiological Cross-Section</div>
               <div className="roi-hud-desc">
@@ -508,7 +586,7 @@ export default function RealBrainScene({
       {/* Render Mode: 3D Three.js Scene */}
       {viewMode === '3d' && hasWebGL && !reducedMotion ? (
         <Canvas
-          camera={{ position: [3.4, 1.8, 4.8], fov: 42 }}
+          camera={{ position: [2.5, 1.4, 4.4], fov: 40 }}
           dpr={[1, 1.75]}
           gl={{
             antialias: true,
@@ -518,9 +596,9 @@ export default function RealBrainScene({
           }}
         >
           <color attach="background" args={['#0c1214']} />
-          <ambientLight intensity={0.58} />
-          <hemisphereLight intensity={0.65} color="#c2e6dc" groundColor="#0d1b1a" />
-          <directionalLight position={[6, 8, 5]} intensity={1.3} color="#eaf6f2" />
+          <ambientLight intensity={0.62} />
+          <hemisphereLight intensity={0.7} color="#c2e6dc" groundColor="#0d1b1a" />
+          <directionalLight position={[6, 8, 5]} intensity={1.35} color="#eaf6f2" />
           <pointLight position={[-5, -3, -4]} intensity={0.8} color="#2a5a54" />
           <spotLight
             position={[0, 5, 2]}
@@ -541,30 +619,34 @@ export default function RealBrainScene({
                 isCrossSection={isCrossSection}
               />
 
-              {/* Subcortical Thalamic Nuclear Complex */}
-              <AnatomicalThalamus focused={focus} />
+              {/* Subcortical Thalamic Nuclear Complex — Only revealed when exploring deep anatomy */}
+              {isInternalActive && <AnatomicalThalamus focused={focus} />}
 
-              {/* Bilateral Striatum (Caudate & Putamen) */}
-              <AnatomicalCaudate
-                side="left"
-                active={focus === 'striatum' || focus === 'caudate'}
-                onClick={() => onSelectAnatomy?.('caudate')}
-              />
-              <AnatomicalCaudate
-                side="right"
-                active={focus === 'striatum' || focus === 'caudate'}
-                onClick={() => onSelectAnatomy?.('caudate')}
-              />
-              <AnatomicalPutamen
-                side="left"
-                active={focus === 'striatum' || focus === 'putamen'}
-                onClick={() => onSelectAnatomy?.('putamen')}
-              />
-              <AnatomicalPutamen
-                side="right"
-                active={focus === 'striatum' || focus === 'putamen'}
-                onClick={() => onSelectAnatomy?.('putamen')}
-              />
+              {/* Bilateral Striatum (Caudate & Putamen) — Only revealed when exploring deep anatomy */}
+              {isInternalActive && (
+                <>
+                  <AnatomicalCaudate
+                    side="left"
+                    active={focus === 'striatum' || focus === 'caudate'}
+                    onClick={() => onSelectAnatomy?.('caudate')}
+                  />
+                  <AnatomicalCaudate
+                    side="right"
+                    active={focus === 'striatum' || focus === 'caudate'}
+                    onClick={() => onSelectAnatomy?.('caudate')}
+                  />
+                  <AnatomicalPutamen
+                    side="left"
+                    active={focus === 'striatum' || focus === 'putamen'}
+                    onClick={() => onSelectAnatomy?.('putamen')}
+                  />
+                  <AnatomicalPutamen
+                    side="right"
+                    active={focus === 'striatum' || focus === 'putamen'}
+                    onClick={() => onSelectAnatomy?.('putamen')}
+                  />
+                </>
+              )}
 
               {/* Orthogonal Slice Plane Guide */}
               <SlicePlaneOverlay mode={sliceMode} visible={isCrossSection} />
@@ -576,8 +658,9 @@ export default function RealBrainScene({
             enablePan={false}
             rotateSpeed={0.45}
             zoomSpeed={0.65}
-            minDistance={1.8}
-            maxDistance={8.5}
+            minDistance={2.2}
+            maxDistance={8.0}
+            target={[0, 0.05, 0]}
             maxPolarAngle={Math.PI / 1.7}
             minPolarAngle={Math.PI / 3.4}
           />
