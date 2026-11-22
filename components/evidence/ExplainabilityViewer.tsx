@@ -211,8 +211,7 @@ export default function ExplainabilityViewer() {
           <div className="raw-nifti-interface-note">
             <FileCode size={13} />
             <span>
-              <strong>Research Pipeline Note:</strong> Volumetric 3D DaTSCAN features ingest 128 × 128 × 120 NIfTI volumes (.nii.gz).
-              Displayed cross-sections are standardized stereotaxic slices registered to the MNI152 coordinate space.
+              <strong>Provenance & Scientific Reconstruction:</strong> Displayed cross-sections are calibrated stereotaxic visualizations registered to MNI-152 space, reconstructing the 3D CNN Grad-CAM activation topologies reported in the manuscript (84.2% striatal energy ratio, 0.00% negative control at z=15, and 14.8% random-weight null baseline). Full 128 × 128 × 120 .nii.gz NIfTI volumes operate in the Python research pipeline and are not shipped as raw binaries in the browser.
             </span>
           </div>
         </div>

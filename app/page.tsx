@@ -366,7 +366,7 @@ export default function Home() {
         </section>
 
         {/* =================================================================== */}
-        {/* SECTION 08 — PEER-REVIEWED EVIDENCE & COMPARATOR BENCHMARKS         */}
+        {/* SECTION 08 — RESEARCH EVIDENCE & COMPARATOR BENCHMARKS               */}
         {/* =================================================================== */}
         <section className="scene-editorial light-editorial" id="evidence">
           <div className="editorial-container">

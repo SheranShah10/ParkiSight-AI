@@ -20,7 +20,7 @@ export default function Footer() {
             Knowledge-Based Multimodal and Missing-Modality Decision Support for Parkinson&apos;s Disease Staging and Progression.
           </p>
           <div className="footer-badge">
-            <ShieldCheck size={14} /> PEER-REVIEWED METHODOLOGY · 2026
+            <ShieldCheck size={14} /> RESEARCH METHODOLOGY · 2026
           </div>
         </div>
 

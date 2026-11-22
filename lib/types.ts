@@ -1,5 +1,5 @@
 export type SliceMode = 'axial' | 'coronal' | 'sagittal';
-export type AnatomyFocus = 'overview' | 'striatum' | 'caudate' | 'putamen' | 'cross-section';
+export type AnatomyFocus = 'overview' | 'striatum' | 'caudate' | 'putamen' | 'compare' | 'cross-section';
 
 export type ResearchMetric = {
   id: string;

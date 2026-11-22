@@ -1116,7 +1116,7 @@ function BenchmarksView({ active, setActive }: { active: string; setActive: (v: 
     <div className="ws-subview">
       <div className="subview-header">
         <div>
-          <span className="scientific-tag">PEER-REVIEWED RESEARCH ARTIFACTS</span>
+          <span className="scientific-tag">RESEARCH BENCHMARK ARTIFACTS</span>
           <h3>Benchmark Explorer</h3>
           <p>Verified experimental results across validation cohorts.</p>
         </div>
@@ -1284,7 +1284,7 @@ function ResearchOverviewView({ onBenchmarks, onAudit }: { onBenchmarks: () => v
 
       <div className="research-actions-dual">
         <div className="action-card" onClick={onBenchmarks}>
-          <h4>Inspect Peer-Reviewed Benchmarks</h4>
+          <h4>Inspect Research Benchmarks</h4>
           <p>Compare performance against TabNet, FT-Transformer, SAINT, and standalone 3D CNN.</p>
           <button type="button" className="ws-action-btn">
             Open Benchmark Explorer <ArrowUpRight size={14} />

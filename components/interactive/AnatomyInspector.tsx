@@ -59,11 +59,27 @@ export default function AnatomyInspector({
         </button>
         <button
           type="button"
+          className={`inspector-btn target-btn ${focus === 'compare' ? 'active' : ''}`}
+          onClick={() => onSelectFocus('compare')}
+          title="Compare contralateral vs ipsilateral striatal dopamine depletion"
+        >
+          <Activity size={12} /> Compare
+        </button>
+        <button
+          type="button"
           className={`inspector-btn target-btn ${focus === 'cross-section' ? 'active' : ''}`}
           onClick={() => onSelectFocus('cross-section')}
           title="Hardware cross-section cutaway clipping"
         >
           <Scissors size={12} /> Section
+        </button>
+        <button
+          type="button"
+          className="inspector-btn reset-btn"
+          onClick={() => onSelectFocus('overview')}
+          title="Reset anatomical camera and orientation"
+        >
+          <RotateCcw size={11} /> Reset
         </button>
       </div>
 
