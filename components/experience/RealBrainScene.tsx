@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { Scan, Layers, Info, Sparkles, Scissors, ArrowDown, X } from 'lucide-react';
+import { Scan, Layers, Info, Sparkles, Scissors, ArrowDown, X, Zap } from 'lucide-react';
 import type { AnatomyFocus, SliceMode } from '@/lib/types';
 
 type BrainSceneProps = {
@@ -250,6 +250,214 @@ function AnatomicalPutamen({
 }
 
 /* -------------------------------------------------------------------------- */
+/* Substantia Nigra Pars Compacta (Dopamine Origin in Upper Midbrain)        */
+/* -------------------------------------------------------------------------- */
+function AnatomicalSubstantiaNigra({ focused }: { focused: AnatomyFocus }) {
+  const isTargeted = focused !== 'overview';
+  const meshGeo = useMemo(() => {
+    const geo = new THREE.CylinderGeometry(0.06, 0.04, 0.22, 16);
+    geo.rotateZ(Math.PI / 3);
+    return geo;
+  }, []);
+
+  return (
+    <group position={[0, -0.12, -0.08]}>
+      {/* Left Substantia Nigra */}
+      <mesh position={[-0.18, 0, 0]} geometry={meshGeo}>
+        <meshPhysicalMaterial
+          color="#38A892"
+          emissive="#38A892"
+          emissiveIntensity={isTargeted ? 1.6 : 0.6}
+          roughness={0.4}
+        />
+      </mesh>
+      {/* Right Substantia Nigra */}
+      <mesh position={[0.18, 0, 0]} geometry={meshGeo}>
+        <meshPhysicalMaterial
+          color="#38A892"
+          emissive="#38A892"
+          emissiveIntensity={isTargeted ? 1.6 : 0.6}
+          roughness={0.4}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Nigrostriatal Dopaminergic Pathways & Animated Action Potentials          */
+/* -------------------------------------------------------------------------- */
+function NigrostriatalPathway({ active }: { active: boolean }) {
+  const pulseRef1 = useRef<THREE.Mesh>(null);
+  const pulseRef2 = useRef<THREE.Mesh>(null);
+  const pulseRef3 = useRef<THREE.Mesh>(null);
+  const pulseRef4 = useRef<THREE.Mesh>(null);
+
+  // Left & right curves from Substantia Nigra up into Caudate and Putamen
+  const curves = useMemo(() => {
+    const c1 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.18, -0.12, -0.08),
+      new THREE.Vector3(-0.22, 0.12, 0.18),
+      new THREE.Vector3(-0.28, 0.38, 0.55),
+    ]);
+    const c2 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.18, -0.12, -0.08),
+      new THREE.Vector3(-0.35, 0.1, 0.12),
+      new THREE.Vector3(-0.56, 0.32, 0.28),
+    ]);
+    const c3 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.18, -0.12, -0.08),
+      new THREE.Vector3(0.22, 0.12, 0.18),
+      new THREE.Vector3(0.28, 0.38, 0.55),
+    ]);
+    const c4 = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.18, -0.12, -0.08),
+      new THREE.Vector3(0.35, 0.1, 0.12),
+      new THREE.Vector3(0.56, 0.32, 0.28),
+    ]);
+
+    return {
+      c1, c2, c3, c4,
+      pts1: c1.getPoints(36),
+      pts2: c2.getPoints(36),
+      pts3: c3.getPoints(36),
+      pts4: c4.getPoints(36),
+    };
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!active) return;
+    const t = clock.getElapsedTime() * 0.75;
+    const p1 = (t % 1);
+    const p2 = ((t + 0.35) % 1);
+    const p3 = ((t + 0.5) % 1);
+    const p4 = ((t + 0.85) % 1);
+
+    if (pulseRef1.current) {
+      pulseRef1.current.position.copy(curves.c1.getPoint(p1));
+    }
+    if (pulseRef2.current) {
+      pulseRef2.current.position.copy(curves.c2.getPoint(p2));
+    }
+    if (pulseRef3.current) {
+      pulseRef3.current.position.copy(curves.c3.getPoint(p3));
+    }
+    if (pulseRef4.current) {
+      pulseRef4.current.position.copy(curves.c4.getPoint(p4));
+    }
+  });
+
+  const lineGeo1 = useMemo(() => new THREE.BufferGeometry().setFromPoints(curves.pts1), [curves]);
+  const lineGeo2 = useMemo(() => new THREE.BufferGeometry().setFromPoints(curves.pts2), [curves]);
+  const lineGeo3 = useMemo(() => new THREE.BufferGeometry().setFromPoints(curves.pts3), [curves]);
+  const lineGeo4 = useMemo(() => new THREE.BufferGeometry().setFromPoints(curves.pts4), [curves]);
+
+  if (!active) return null;
+
+  return (
+    <group>
+      {/* Nigrostriatal Axonal Projection Fiber Lines */}
+      <primitive object={new THREE.Line(lineGeo1, new THREE.LineBasicMaterial({ color: '#38A892', transparent: true, opacity: 0.65 }))} />
+      <primitive object={new THREE.Line(lineGeo2, new THREE.LineBasicMaterial({ color: '#FF7043', transparent: true, opacity: 0.7 }))} />
+      <primitive object={new THREE.Line(lineGeo3, new THREE.LineBasicMaterial({ color: '#38A892', transparent: true, opacity: 0.65 }))} />
+      <primitive object={new THREE.Line(lineGeo4, new THREE.LineBasicMaterial({ color: '#FF7043', transparent: true, opacity: 0.7 }))} />
+
+      {/* Traveling Dopaminergic Action Potential Beads */}
+      <mesh ref={pulseRef1}>
+        <sphereGeometry args={[0.03, 12, 12]} />
+        <meshBasicMaterial color="#55E6CC" />
+      </mesh>
+      <mesh ref={pulseRef2}>
+        <sphereGeometry args={[0.034, 12, 12]} />
+        <meshBasicMaterial color="#FF9E80" />
+      </mesh>
+      <mesh ref={pulseRef3}>
+        <sphereGeometry args={[0.03, 12, 12]} />
+        <meshBasicMaterial color="#55E6CC" />
+      </mesh>
+      <mesh ref={pulseRef4}>
+        <sphereGeometry args={[0.034, 12, 12]} />
+        <meshBasicMaterial color="#FF9E80" />
+      </mesh>
+    </group>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Deep Brain Stimulation (DBS) Subthalamic Quadripolar Lead & 130 Hz Wave   */
+/* -------------------------------------------------------------------------- */
+function DBSElectrodeStimulator({ active }: { active: boolean }) {
+  const waveRef1 = useRef<THREE.Mesh>(null);
+  const waveRef2 = useRef<THREE.Mesh>(null);
+
+  useFrame(({ clock }) => {
+    if (!active) return;
+    const t = clock.getElapsedTime() * 3.4;
+    const s1 = 1 + (t % 1.5) * 1.8;
+    const s2 = 1 + ((t + 0.75) % 1.5) * 1.8;
+    const op1 = Math.max(0, 0.7 - ((t % 1.5) / 1.5) * 0.7);
+    const op2 = Math.max(0, 0.7 - (((t + 0.75) % 1.5) / 1.5) * 0.7);
+
+    if (waveRef1.current) {
+      waveRef1.current.scale.set(s1, s1, s1);
+      (waveRef1.current.material as THREE.MeshBasicMaterial).opacity = op1;
+    }
+    if (waveRef2.current) {
+      waveRef2.current.scale.set(s2, s2, s2);
+      (waveRef2.current.material as THREE.MeshBasicMaterial).opacity = op2;
+    }
+  });
+
+  if (!active) return null;
+
+  return (
+    <group position={[0.22, 0.08, -0.02]} rotation={[0.15, 0, 0.18]}>
+      {/* Stereotaxic Lead Shaft (Platinum-Iridium) */}
+      <mesh position={[0, 0.6, 0]}>
+        <cylinderGeometry args={[0.014, 0.014, 1.3, 16]} />
+        <meshStandardMaterial color="#94A3B8" metalness={0.9} roughness={0.15} />
+      </mesh>
+
+      {/* 4 Cylindrical Micro-Electrode Contacts (0, 1, 2, 3) */}
+      {[0, 0.06, 0.12, 0.18].map((yOffset, idx) => (
+        <mesh key={idx} position={[0, yOffset, 0]}>
+          <cylinderGeometry args={[0.018, 0.018, 0.035, 16]} />
+          <meshStandardMaterial
+            color="#E2E8F0"
+            metalness={0.95}
+            roughness={0.1}
+            emissive="#55E6CC"
+            emissiveIntensity={0.9}
+          />
+        </mesh>
+      ))}
+
+      {/* 130 Hz High-Frequency Electrical Pulse Field */}
+      <mesh ref={waveRef1} position={[0, 0.06, 0]}>
+        <sphereGeometry args={[0.12, 16, 16]} />
+        <meshBasicMaterial
+          color="#55E6CC"
+          transparent
+          opacity={0.6}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh ref={waveRef2} position={[0, 0.06, 0]}>
+        <sphereGeometry args={[0.12, 16, 16]} />
+        <meshBasicMaterial
+          color="#38A892"
+          transparent
+          opacity={0.6}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Orthogonal Imaging Slice Plane Guide Overlay                               */
 /* -------------------------------------------------------------------------- */
 function SlicePlaneOverlay({ mode, visible }: { mode: SliceMode; visible: boolean }) {
@@ -356,6 +564,43 @@ export default function RealBrainScene({
   const [viewMode, setViewMode] = useState<'3d' | 'atlas'>('3d');
   // Text box dossier is hidden by default per user request, toggled via button
   const [showDossier, setShowDossier] = useState(false);
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+  const [dbsActive, setDbsActive] = useState(false);
+  const [reticleCoords, setReticleCoords] = useState<{
+    x: number;
+    y: number;
+    mniX: string;
+    mniY: string;
+    mniZ: string;
+  } | null>(null);
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'touch') return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const normX = (x / rect.width) * 2 - 1;
+    const normY = -(y / rect.height) * 2 + 1;
+
+    setReticleCoords({
+      x,
+      y,
+      mniX: (normX * 42).toFixed(1),
+      mniY: (normY * 48 + 10).toFixed(1),
+      mniZ: ((normX + normY) * 18 + 8).toFixed(1),
+    });
+  };
+
+  useEffect(() => {
+    const current = (document.documentElement.getAttribute('data-theme') as 'dark' | 'light') || 'dark';
+    setThemeMode(current);
+
+    const onThemeChange = (e: CustomEvent<'dark' | 'light'>) => {
+      if (e.detail) setThemeMode(e.detail);
+    };
+    window.addEventListener('themechange', onThemeChange as EventListener);
+    return () => window.removeEventListener('themechange', onThemeChange as EventListener);
+  }, []);
 
   useEffect(() => {
     try {
@@ -384,18 +629,57 @@ export default function RealBrainScene({
   const isInternalActive = focus !== 'overview';
 
   return (
-    <div className="canvas-wrapper" style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div
+      className="canvas-wrapper"
+      style={{ width: '100%', height: '100%', position: 'relative' }}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={() => setReticleCoords(null)}
+    >
+      {/* Precision Stereotaxic MNI Floating Reticle */}
+      {viewMode === '3d' && reticleCoords && (
+        <div
+          className="mni-reticle-hud"
+          style={{
+            transform: `translate3d(${reticleCoords.x + 12}px, ${reticleCoords.y + 12}px, 0)`,
+          }}
+        >
+          <div className="reticle-readout">
+            <span className="reticle-coords">
+              X:{reticleCoords.mniX} Y:{reticleCoords.mniY} Z:{reticleCoords.mniZ}
+            </span>
+            <span className="reticle-tag">MNI mm</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Left: Dossier Toggle Pill Button */}
       {viewMode === '3d' && labelsOn && (
-        <button
-          type="button"
-          className={`dossier-toggle-pill ${showDossier ? 'is-active' : ''}`}
-          onClick={() => setShowDossier(!showDossier)}
-          title={showDossier ? 'Hide anatomical details' : 'Show anatomical details & MNI coordinates'}
-        >
-          <Info size={12} />
-          <span>{showDossier ? 'HIDE DOSSIER' : 'ANATOMICAL DOSSIER'}</span>
-        </button>
+        <div className="top-left-pills-row">
+          <button
+            type="button"
+            className={`dossier-toggle-pill ${showDossier ? 'is-active' : ''}`}
+            onClick={() => setShowDossier(!showDossier)}
+            title={showDossier ? 'Hide anatomical details' : 'Show anatomical details & MNI coordinates'}
+          >
+            <Info size={12} />
+            <span>{showDossier ? 'HIDE DOSSIER' : 'ANATOMICAL DOSSIER'}</span>
+          </button>
+          <button
+            type="button"
+            className={`dbs-toggle-pill ${dbsActive ? 'is-active' : ''}`}
+            onClick={() => {
+              const next = !dbsActive;
+              setDbsActive(next);
+              if (next && focus === 'overview') {
+                onSelectAnatomy?.('striatum');
+              }
+            }}
+            title={dbsActive ? 'Deactivate DBS Neurostimulation' : 'Engage 130 Hz Subthalamic DBS Lead Simulation'}
+          >
+            <Zap size={11} className={dbsActive ? 'pulse-zap' : ''} />
+            <span>{dbsActive ? '130 Hz DBS ACTIVE' : 'SIMULATE DBS'}</span>
+          </button>
+        </div>
       )}
 
       {/* Top Right: View Mode Switcher (3D Orbit vs Medical Atlas) */}
@@ -600,10 +884,10 @@ export default function RealBrainScene({
             powerPreference: 'high-performance',
           }}
         >
-          <color attach="background" args={['#0c1214']} />
-          <ambientLight intensity={0.62} />
-          <hemisphereLight intensity={0.7} color="#c2e6dc" groundColor="#0d1b1a" />
-          <directionalLight position={[6, 8, 5]} intensity={1.35} color="#eaf6f2" />
+          <color attach="background" args={[themeMode === 'light' ? '#ece8e0' : '#0c1214']} />
+          <ambientLight intensity={themeMode === 'light' ? 0.85 : 0.62} />
+          <hemisphereLight intensity={themeMode === 'light' ? 0.85 : 0.7} color={themeMode === 'light' ? '#ffffff' : '#c2e6dc'} groundColor={themeMode === 'light' ? '#ded8cc' : '#0d1b1a'} />
+          <directionalLight position={[6, 8, 5]} intensity={themeMode === 'light' ? 1.6 : 1.35} color={themeMode === 'light' ? '#ffffff' : '#eaf6f2'} />
           <pointLight position={[-5, -3, -4]} intensity={0.8} color="#2a5a54" />
           <spotLight
             position={[0, 5, 2]}
@@ -626,6 +910,15 @@ export default function RealBrainScene({
 
               {/* Subcortical Thalamic Nuclear Complex — Only revealed when exploring deep anatomy */}
               {isInternalActive && <AnatomicalThalamus focused={focus} />}
+
+              {/* Substantia Nigra (Dopamine Factory) — Only revealed when exploring deep anatomy */}
+              {isInternalActive && <AnatomicalSubstantiaNigra focused={focus} />}
+
+              {/* Nigrostriatal Action Potential Fiber Pulses — Only revealed when exploring deep anatomy */}
+              {isInternalActive && <NigrostriatalPathway active={isInternalActive} />}
+
+              {/* Deep Brain Stimulation (DBS) Subthalamic Neurostimulation Lead */}
+              <DBSElectrodeStimulator active={dbsActive} />
 
               {/* Bilateral Striatum (Caudate & Putamen) — Only revealed when exploring deep anatomy */}
               {isInternalActive && (

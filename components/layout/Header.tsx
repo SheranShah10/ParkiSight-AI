@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Activity, ArrowUpRight, Menu, X, ShieldCheck } from 'lucide-react';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 type Props = {
   activeChapter?: number;
@@ -64,6 +65,7 @@ export default function Header({ activeChapter = 0 }: Props) {
 
         {/* Right Action Buttons */}
         <div className="header-actions">
+          <ThemeToggle />
           <Link href="/auth" className="auth-link">
             Sign In
           </Link>
@@ -103,6 +105,10 @@ export default function Header({ activeChapter = 0 }: Props) {
               <b>05</b> Research Evidence & Cohorts
             </a>
             <div className="drawer-actions">
+              <div className="drawer-theme-row">
+                <span>Color Theme:</span>
+                <ThemeToggle showLabel={true} />
+              </div>
               <Link href="/auth" onClick={() => setMenuOpen(false)} className="drawer-auth-btn">
                 Workspace Roles
               </Link>

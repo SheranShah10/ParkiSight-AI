@@ -1,11 +1,25 @@
 'use client';
 
 import { useState } from 'react';
-import { ScanLine, Info, ShieldCheck, ArrowRight } from 'lucide-react';
+import { ScanLine, Info, ShieldCheck, ArrowRight, Clock, Activity, Sparkles } from 'lucide-react';
 
 export default function ScanComparison() {
   const [sliderPos, setSliderPos] = useState(50);
-  const [activeTab, setActiveTab] = useState<'comparison' | 'spectDetails'>('comparison');
+  const [progressionYear, setProgressionYear] = useState(3);
+  const [activeTab, setActiveTab] = useState<'comparison' | 'progression' | 'spectDetails'>('comparison');
+
+  // Interpolated metrics across the 10-year timeline
+  const sbrUptake = Math.max(0.65, Number((2.88 - (progressionYear * 0.224)).toFixed(2)));
+  const putamenIntegrity = Math.max(12, Math.round(100 - (progressionYear * 8.8)));
+  const motorUpdrs = Math.min(58, Math.round(18 + (progressionYear * 4.0)));
+  const stageName =
+    progressionYear <= 1
+      ? 'Stage 0 · Prodromal / Control'
+      : progressionYear <= 3
+      ? 'Stage 1 · Unilateral Putamen Loss'
+      : progressionYear <= 6
+      ? 'Stage 2 · Bilateral Comma-to-Dot'
+      : 'Stage 3 · Striatal Extinction';
 
   return (
     <div className="scan-comparison-card">
@@ -22,6 +36,14 @@ export default function ScanComparison() {
             onClick={() => setActiveTab('comparison')}
           >
             Dual Comparison
+          </button>
+          <button
+            role="tab"
+            aria-selected={activeTab === 'progression'}
+            className={activeTab === 'progression' ? 'active' : ''}
+            onClick={() => setActiveTab('progression')}
+          >
+            <Clock size={12} /> 10-Year Progression Scrubber
           </button>
           <button
             role="tab"
@@ -95,6 +117,103 @@ export default function ScanComparison() {
             <div className="meta-col">
               <span className="meta-key">RECONSTRUCTION</span>
               <b className="meta-val">128 × 128 × 120 Voxel Matrix</b>
+            </div>
+          </div>
+        </div>
+      ) : activeTab === 'progression' ? (
+        <div className="progression-scrubber-view">
+          <div className="scrubber-topline">
+            <div className="scrubber-year-badge">
+              <Clock size={14} />
+              <span>DISEASE DURATION: <strong>YEAR {progressionYear}</strong> OF PROGRESSION</span>
+            </div>
+            <div className="scrubber-quick-jump">
+              {[0, 2, 5, 8, 10].map((yr) => (
+                <button
+                  key={yr}
+                  type="button"
+                  className={`scrub-step-btn ${progressionYear === yr ? 'active' : ''}`}
+                  onClick={() => setProgressionYear(yr)}
+                >
+                  Yr {yr}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dynamic DaTSCAN Morphing Viewport */}
+          <div className="progression-viewport">
+            <div className="spect-dynamic-canvas">
+              {/* Left Striatum (Caudate + Putamen) */}
+              <div
+                className="spect-morph-left"
+                style={{
+                  opacity: Math.max(0.18, 1 - progressionYear * 0.08),
+                  filter: `blur(${Math.max(1, progressionYear * 0.8)}px)`,
+                  transform: `scale(${Math.max(0.55, 1 - progressionYear * 0.04)})`,
+                }}
+              />
+              {/* Right Striatum (First to degenerate in early PD - comma tail vanishes) */}
+              <div
+                className="spect-morph-right"
+                style={{
+                  opacity: Math.max(0.08, 1 - progressionYear * 0.11),
+                  filter: `blur(${Math.max(1, progressionYear * 1.2)}px)`,
+                  transform: `scale(${Math.max(0.4, 1 - progressionYear * 0.065)})`,
+                  borderRadius: progressionYear > 1 ? '50%' : '50% 50% 50% 10%', // morph comma to dot
+                }}
+              />
+              <div className="spect-central-landmark" />
+            </div>
+
+            <div className="progression-stage-overlay">
+              <span className="progression-stage-title">{stageName}</span>
+              <p className="progression-stage-desc">
+                {progressionYear <= 1 && 'Symmetric, full striatal binding. Both caudate nuclei and putamina present normal physiological comma shapes.'}
+                {progressionYear > 1 && progressionYear <= 3 && 'Contralateral posterior putaminal tail extinguished. Classic unilateral transition from comma to round dot.'}
+                {progressionYear > 3 && progressionYear <= 6 && 'Bilateral putaminal loss established. Striatal binding reduced to bilateral isolated caudate dots.'}
+                {progressionYear > 6 && 'Extensive striatal extinction. Low signal-to-noise ratio approaching background non-specific cerebral scatter.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Interactive Range Slider */}
+          <div className="scrubber-slider-container">
+            <div className="slider-ticks-row">
+              <span>Year 0 (Prodromal)</span>
+              <span>Year 2 (Early)</span>
+              <span>Year 5 (Moderate)</span>
+              <span>Year 8 (Advanced)</span>
+              <span>Year 10 (End-Stage)</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="1"
+              value={progressionYear}
+              onChange={(e) => setProgressionYear(Number(e.target.value))}
+              className="progression-range-input"
+              aria-label="Scrub longitudinal disease year from 0 to 10"
+            />
+          </div>
+
+          {/* Dynamic Scientific Gauges */}
+          <div className="scrubber-gauges-grid">
+            <div className="gauge-card">
+              <span className="gauge-label">STRIATAL BINDING RATIO (SBR)</span>
+              <strong className="gauge-val highlight-cyan">{sbrUptake}</strong>
+              <small>Physiological baseline: ~2.88</small>
+            </div>
+            <div className="gauge-card">
+              <span className="gauge-label">PUTAMEN INTEGRITY</span>
+              <strong className="gauge-val highlight-amber">{putamenIntegrity}%</strong>
+              <small>Volumetric dopaminergic density</small>
+            </div>
+            <div className="gauge-card">
+              <span className="gauge-label">PROJECTED MDS-UPDRS MOTOR</span>
+              <strong className="gauge-val highlight-orange">{motorUpdrs}</strong>
+              <small>Severity score (Range: 0–132)</small>
             </div>
           </div>
         </div>

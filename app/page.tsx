@@ -13,6 +13,8 @@ import PatientTimeline from '@/components/interactive/PatientTimeline';
 import CohortFlow from '@/components/evidence/CohortFlow';
 import EvidenceExplorer from '@/components/evidence/EvidenceExplorer';
 import ExplainabilityViewer from '@/components/evidence/ExplainabilityViewer';
+import SpiralBiomarkerTest from '@/components/interactive/SpiralBiomarkerTest';
+import BiomarkerRadar from '@/components/interactive/BiomarkerRadar';
 import type { AnatomyFocus, SliceMode } from '@/lib/types';
 import { Activity, ArrowRight, ArrowUpRight, ShieldCheck, ChevronDown, Sparkles, Layers, Cpu, HeartPulse } from 'lucide-react';
 
@@ -217,6 +219,11 @@ export default function Home() {
 
             {/* Interactive Dual-View Scan Comparison Workstation */}
             <ScanComparison />
+
+            {/* Interactive Digital Neuromotor Biomarker Lab (Archimedes Spiral) */}
+            <div style={{ marginTop: '48px' }}>
+              <SpiralBiomarkerTest />
+            </div>
           </div>
         </section>
 
@@ -271,6 +278,11 @@ export default function Home() {
 
             {/* Interactive AMGU Architecture Canvas */}
             <AMGUControl spectOn={!spectMissing} onToggleSpect={(on) => setSpectMissing(!on)} />
+
+            {/* 6-Axis Multi-Modal Biomarker Radar Fingerprint */}
+            <div style={{ marginTop: '48px' }}>
+              <BiomarkerRadar />
+            </div>
           </div>
         </section>
 

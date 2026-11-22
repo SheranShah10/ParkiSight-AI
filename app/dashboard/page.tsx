@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { runDemoInference, type DemoInferenceResult, type InferenceInputs } from './demo-inference';
 import { VERIFIED_BENCHMARKS, COMPARATOR_MODELS, COHORT_STROBE, ANTI_LEAKAGE_GUARDRAILS, XAI_DATA } from '@/lib/research-data';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 const roles = ['Clinician / Neurologist', 'Patient / Caregiver', 'Researcher / Trial Lead'] as const;
 type Role = (typeof roles)[number];
@@ -401,6 +402,8 @@ export default function Dashboard() {
             <span className="research-status-pill">
               <i className="status-dot-active" /> SIMULATION ENVIRONMENT
             </span>
+
+            <ThemeToggle />
 
             <button
               type="button"

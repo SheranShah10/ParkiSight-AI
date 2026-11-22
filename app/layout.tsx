@@ -43,6 +43,10 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
+                  var savedTheme = localStorage.getItem('parkisight-theme') || 'dark';
+                  document.documentElement.setAttribute('data-theme', savedTheme);
+                } catch (e) {}
+                try {
                   var origSetAttr = Element.prototype.setAttribute;
                   Element.prototype.setAttribute = function(name, val) {
                     if (name && (name === 'bis_skin_checked' || name.indexOf('bis_') === 0 || name.indexOf('__processed_') === 0)) {

@@ -5666,3 +5666,1228 @@ input, select, textarea {
   color: #fff;
   background: rgba(255, 255, 255, 0.15);
 }
+
+/* ==========================================================================
+   THEME SYSTEM — CLINICAL OBSIDIAN (DARK) & RESEARCH BONE (LIGHT)
+   ========================================================================== */
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  color: var(--text-dark);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.theme-icon {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-toggle-btn:hover .sun-icon {
+  transform: rotate(45deg);
+  color: #FBBF24;
+}
+
+.theme-toggle-btn:hover .moon-icon {
+  transform: rotate(-20deg);
+  color: #60A5FA;
+}
+
+.theme-btn-label {
+  letter-spacing: 0.04em;
+}
+
+/* Mobile drawer theme row */
+.drawer-theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted-dark);
+}
+
+/* -------------------------------------------------------------------------- */
+/* LIGHT THEME (Research Bone / Clinical Paper Mode)                          */
+/* -------------------------------------------------------------------------- */
+html[data-theme="light"] {
+  --bg-dark: #F4F2EC;
+  --bg-dark-panel: #FFFFFF;
+  --bg-dark-surface: #EAE7DF;
+  --bg-bone: #FCFBF7;
+  --text-carbon: #181C1B;
+  --text-dark: #1A211F;
+  --text-muted: #596762;
+  --text-muted-dark: #505F5A;
+  --border-light: rgba(24, 28, 27, 0.12);
+  --border-dark: rgba(24, 28, 27, 0.14);
+  background-color: #F4F2EC;
+  color: #1A211F;
+}
+
+html[data-theme="light"] body {
+  background-color: #F4F2EC;
+  color: #1A211F;
+}
+
+html[data-theme="light"] .theme-toggle-btn {
+  background: rgba(24, 28, 27, 0.06);
+  border-color: rgba(24, 28, 27, 0.15);
+  color: #1A211F;
+}
+
+html[data-theme="light"] .theme-toggle-btn:hover {
+  background: rgba(24, 28, 27, 0.12);
+  border-color: rgba(24, 28, 27, 0.25);
+  color: #000;
+}
+
+/* Landing Page Sections in Light Theme */
+html[data-theme="light"] .neural-header {
+  background: rgba(244, 242, 236, 0.94);
+  border-bottom-color: rgba(24, 28, 27, 0.12);
+}
+
+html[data-theme="light"] .neural-header.is-scrolled {
+  background: rgba(244, 242, 236, 0.98);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .nav-link {
+  color: #55635E;
+}
+
+html[data-theme="light"] .nav-link:hover {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .brand-name strong {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .auth-link {
+  color: #55635E;
+}
+
+html[data-theme="light"] .dark-exhibition {
+  background-color: #EDEAE1;
+  color: #1A211F;
+}
+
+html[data-theme="light"] .dark-exhibition .editorial-copy,
+html[data-theme="light"] .hero-narrative-lead,
+html[data-theme="light"] .roi-mni,
+html[data-theme="light"] .roi-hud-desc,
+html[data-theme="light"] .hero-stamp-tag,
+html[data-theme="light"] .cohort-sub-intro,
+html[data-theme="light"] .matrix-topline-copy {
+  color: #4E5D57;
+}
+
+html[data-theme="light"] .dark-exhibition .section-chapter-tag,
+html[data-theme="light"] .dark-exhibition .chapter-lead,
+html[data-theme="light"] .hero-display-heading,
+html[data-theme="light"] .cohort-main-title,
+html[data-theme="light"] .matrix-main-title,
+html[data-theme="light"] .journey-title {
+  color: #181C1B;
+}
+
+/* 3D Brain Canvas Frame in Light Mode */
+html[data-theme="light"] .canvas-frame {
+  background: radial-gradient(ellipse at 50% 50%, #FAF8F2 0%, #E6E2D6 82%);
+  border-color: rgba(24, 28, 27, 0.15);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="light"] .canvas-top-hud .hud-badge {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(24, 28, 27, 0.12);
+  color: #181C1B;
+}
+
+html[data-theme="light"] .hud-coord {
+  color: #586661;
+}
+
+html[data-theme="light"] .dossier-toggle-pill {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(24, 28, 27, 0.14);
+  color: #1A211F;
+}
+
+html[data-theme="light"] .dossier-toggle-pill.is-active,
+html[data-theme="light"] .dossier-toggle-pill:hover {
+  background: rgba(216, 92, 66, 0.1);
+  border-color: var(--signal-orange);
+  color: var(--signal-orange);
+}
+
+html[data-theme="light"] .brain-view-mode-pill {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(24, 28, 27, 0.14);
+}
+
+html[data-theme="light"] .view-mode-btn {
+  color: #55635E;
+}
+
+html[data-theme="light"] .view-mode-btn.active {
+  background: var(--signal-orange);
+  color: #fff;
+}
+
+html[data-theme="light"] .roi-floating-hud {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: rgba(24, 28, 27, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="light"] .roi-hud-title {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .roi-hud-meta {
+  color: #55635E;
+  border-top-color: rgba(24, 28, 27, 0.1);
+}
+
+html[data-theme="light"] .roi-close-btn {
+  color: #64716C;
+}
+
+html[data-theme="light"] .roi-close-btn:hover {
+  color: #000;
+  background: rgba(24, 28, 27, 0.08);
+}
+
+html[data-theme="light"] .anatomy-inspector-bar {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(24, 28, 27, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="light"] .inspector-btn,
+html[data-theme="light"] .slice-btn,
+html[data-theme="light"] .toggle-labels-btn,
+html[data-theme="light"] .reset-btn {
+  color: #55635E;
+  background: rgba(24, 28, 27, 0.04);
+  border-color: rgba(24, 28, 27, 0.1);
+}
+
+html[data-theme="light"] .inspector-btn:hover,
+html[data-theme="light"] .slice-btn:hover {
+  color: #181C1B;
+  background: rgba(24, 28, 27, 0.08);
+}
+
+html[data-theme="light"] .inspector-btn.active,
+html[data-theme="light"] .slice-btn.active {
+  background: var(--signal-orange);
+  border-color: var(--signal-orange);
+  color: #fff;
+}
+
+html[data-theme="light"] .canvas-bottom-hud .hud-left span {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .canvas-bottom-hud .hud-left small {
+  color: #55635E;
+}
+
+/* Light Mode Containers & Cards */
+html[data-theme="light"] .missingness-matrix-container,
+html[data-theme="light"] .strobe-cohort-container,
+html[data-theme="light"] .patient-journey-container,
+html[data-theme="light"] .explainability-card {
+  background: #FFFFFF;
+  border-color: rgba(24, 28, 27, 0.12);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme="light"] .matrix-grid-display {
+  background: #F5F3EC;
+  border-color: rgba(24, 28, 27, 0.1);
+}
+
+html[data-theme="light"] .timeline-step-btn {
+  background: #F7F5EE;
+  border-color: rgba(24, 28, 27, 0.1);
+  color: #181C1B;
+}
+
+html[data-theme="light"] .timeline-step-btn.is-active {
+  background: #FFFFFF;
+  border-color: var(--signal-orange);
+  box-shadow: 0 4px 14px rgba(216, 92, 66, 0.15);
+}
+
+html[data-theme="light"] .neural-footer {
+  background-color: #E6E2D6;
+  border-top-color: rgba(24, 28, 27, 0.12);
+  color: #181C1B;
+}
+
+html[data-theme="light"] .footer-disclaimer-box {
+  background: #DDD9CB;
+  border-color: rgba(24, 28, 27, 0.12);
+  color: #242E2A;
+}
+
+html[data-theme="light"] .footer-bottom-line {
+  border-top-color: rgba(24, 28, 27, 0.1);
+  color: #64716C;
+}
+
+/* Light Mode Dashboard & Workstation */
+html[data-theme="light"] .ws-dashboard-root {
+  background: #F3F1EA;
+  color: #1A211F;
+}
+
+html[data-theme="light"] .ws-sidebar {
+  background: #FFFFFF;
+  border-right-color: rgba(24, 28, 27, 0.12);
+}
+
+html[data-theme="light"] .sidebar-brand strong {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .sidebar-nav-btn {
+  color: #55635E;
+}
+
+html[data-theme="light"] .sidebar-nav-btn:hover {
+  background: rgba(24, 28, 27, 0.04);
+  color: #181C1B;
+}
+
+html[data-theme="light"] .sidebar-nav-btn.is-active {
+  background: rgba(216, 92, 66, 0.1);
+  color: var(--signal-orange);
+}
+
+html[data-theme="light"] .ws-topbar {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom-color: rgba(24, 28, 27, 0.1);
+}
+
+html[data-theme="light"] .topbar-breadcrumb {
+  color: #55635E;
+}
+
+html[data-theme="light"] .topbar-breadcrumb strong {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .ws-panel {
+  background: #FFFFFF;
+  border-color: rgba(24, 28, 27, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .viewport-title {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .viewport-subtitle {
+  color: #55635E;
+}
+
+html[data-theme="light"] .user-text b {
+  color: #181C1B;
+}
+
+html[data-theme="light"] .user-text small {
+  color: #64716C;
+}
+
+html[data-theme="light"] .user-avatar-badge {
+  background: #EAE7DE;
+  color: #181C1B;
+  border-color: rgba(24, 28, 27, 0.15);
+}
+
+/* ==========================================================================
+   PRECISION STEREOTAXIC MNI RETICLE & 10-YEAR PROGRESSION SCRUBBER
+   ========================================================================== */
+
+/* Precision Stereotaxic MNI Floating Reticle */
+.mni-reticle-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInReticle 0.15s ease-out;
+}
+
+@keyframes fadeInReticle {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.reticle-readout {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(10, 15, 17, 0.88);
+  border: 1px solid rgba(85, 230, 204, 0.4);
+  padding: 3px 8px;
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.reticle-coords {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: #55E6CC;
+  letter-spacing: 0.05em;
+}
+
+.reticle-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  color: #9cb0a7;
+  letter-spacing: 0.1em;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+html[data-theme="light"] .reticle-readout {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(56, 168, 146, 0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="light"] .reticle-coords {
+  color: #178370;
+}
+
+html[data-theme="light"] .reticle-tag {
+  color: #55635E;
+  background: rgba(24, 28, 27, 0.08);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 10-Year Progression Scrubber View                                          */
+/* -------------------------------------------------------------------------- */
+.progression-scrubber-view {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.scrubber-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.scrubber-year-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dark);
+  background: rgba(216, 92, 66, 0.12);
+  border: 1px solid rgba(216, 92, 66, 0.35);
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.scrubber-year-badge strong {
+  color: var(--signal-orange);
+}
+
+.scrubber-quick-jump {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scrub-step-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted-dark);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scrub-step-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.scrub-step-btn.active {
+  background: var(--signal-orange);
+  border-color: var(--signal-orange);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Progression Viewport & Real-Time Morphing Canvas */
+.progression-viewport {
+  position: relative;
+  height: 320px;
+  background: radial-gradient(circle at 50% 50%, #151d1c 0%, #070b0c 85%);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-theme="light"] .progression-viewport {
+  background: radial-gradient(circle at 50% 50%, #FAF8F2 0%, #E3DFD5 85%);
+  border-color: rgba(24, 28, 27, 0.15);
+}
+
+.spect-dynamic-canvas {
+  position: relative;
+  width: 260px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.spect-morph-left {
+  width: 72px;
+  height: 110px;
+  background: radial-gradient(ellipse at 40% 40%, #FFE082 0%, #FF6D00 45%, #D50000 70%, transparent 88%);
+  border-radius: 50% 50% 50% 15%;
+  filter: blur(1.5px);
+  box-shadow: 0 0 32px rgba(255, 109, 0, 0.65);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spect-morph-right {
+  width: 72px;
+  height: 110px;
+  background: radial-gradient(ellipse at 60% 40%, #FFE082 0%, #FF6D00 45%, #D50000 70%, transparent 88%);
+  border-radius: 50% 50% 50% 15%;
+  filter: blur(1.5px);
+  box-shadow: 0 0 32px rgba(255, 109, 0, 0.65);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spect-central-landmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: rgba(85, 230, 204, 0.35);
+  border-radius: 50%;
+}
+
+.progression-stage-overlay {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  right: 20px;
+  background: rgba(11, 16, 19, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  backdrop-filter: blur(10px);
+}
+
+html[data-theme="light"] .progression-stage-overlay {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(24, 28, 27, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.progression-stage-title {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  display: block;
+  margin-bottom: 3px;
+}
+
+html[data-theme="light"] .progression-stage-title {
+  color: #181C1B;
+}
+
+.progression-stage-desc {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-muted-dark);
+  margin: 0;
+}
+
+html[data-theme="light"] .progression-stage-desc {
+  color: #55635E;
+}
+
+/* Progression Range Input Slider */
+.scrubber-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.slider-ticks-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted-dark);
+}
+
+.progression-range-input {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.progression-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--signal-orange);
+  border: 2px solid #fff;
+  box-shadow: 0 0 14px rgba(216, 92, 66, 0.7);
+  cursor: grab;
+  transition: transform 0.15s ease;
+}
+
+.progression-range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Scientific Gauges Grid */
+.scrubber-gauges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+  .scrubber-gauges-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.gauge-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+html[data-theme="light"] .gauge-card {
+  background: #FFFFFF;
+  border-color: rgba(24, 28, 27, 0.12);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.gauge-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted-dark);
+}
+
+.gauge-val {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.gauge-card small {
+  font-size: 10px;
+  color: var(--text-dark);
+  opacity: 0.7;
+}
+
+.highlight-cyan {
+  color: #55E6CC;
+}
+
+.highlight-amber {
+  color: #FFA726;
+}
+
+.highlight-orange {
+  color: #FF5722;
+}
+
+/* ==========================================================================
+   DBS STIMULATION PILL, SPIRAL TEST LAB & BIOMARKER RADAR
+   ========================================================================== */
+
+/* Top-Left Pills Container */
+.top-left-pills-row {
+  position: absolute;
+  top: 56px;
+  left: 20px;
+  z-index: 28;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .top-left-pills-row {
+    top: 44px;
+    left: 12px;
+    gap: 6px;
+  }
+}
+
+/* Deep Brain Stimulation Toggle Pill */
+.dbs-toggle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(14, 20, 24, 0.85);
+  border: 1px solid rgba(85, 230, 204, 0.35);
+  border-radius: 18px;
+  color: #55E6CC;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.dbs-toggle-pill:hover,
+.dbs-toggle-pill.is-active {
+  background: rgba(85, 230, 204, 0.2);
+  border-color: #55E6CC;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(85, 230, 204, 0.4);
+}
+
+.pulse-zap {
+  animation: pulseZap 1s infinite alternate;
+}
+
+@keyframes pulseZap {
+  from { transform: scale(0.9); opacity: 0.8; }
+  to { transform: scale(1.25); opacity: 1; filter: drop-shadow(0 0 6px #55E6CC); }
+}
+
+html[data-theme="light"] .dbs-toggle-pill {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(56, 168, 146, 0.4);
+  color: #178370;
+}
+
+html[data-theme="light"] .dbs-toggle-pill:hover,
+html[data-theme="light"] .dbs-toggle-pill.is-active {
+  background: rgba(56, 168, 146, 0.15);
+  border-color: #178370;
+  color: #0F5E50;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Spiral Biomarker Card                                                      */
+/* -------------------------------------------------------------------------- */
+.spiral-biomarker-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 36px;
+  box-shadow: var(--shadow-subtle);
+}
+
+html[data-theme="dark"] .spiral-biomarker-card {
+  background: var(--bg-dark-panel);
+  border-color: var(--border-dark);
+}
+
+@media (max-width: 768px) {
+  .spiral-biomarker-card {
+    padding: 20px 14px;
+  }
+}
+
+.spiral-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.spiral-card-title {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 6px 0 0;
+  color: var(--text-carbon);
+}
+
+html[data-theme="dark"] .spiral-card-title {
+  color: var(--text-dark);
+}
+
+.spiral-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.spiral-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(24, 28, 27, 0.05);
+  border: 1px solid rgba(24, 28, 27, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--text-carbon);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html[data-theme="dark"] .spiral-mode-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-dark);
+}
+
+.spiral-mode-btn:hover {
+  background: rgba(216, 92, 66, 0.1);
+  border-color: var(--signal-orange);
+  color: var(--signal-orange);
+}
+
+.spiral-mode-btn.active {
+  background: var(--signal-orange);
+  border-color: var(--signal-orange);
+  color: #fff;
+}
+
+.spiral-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .spiral-body-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.spiral-canvas-wrap {
+  position: relative;
+  height: 340px;
+  background: #090e10;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
+  touch-action: none;
+}
+
+.spiral-interactive-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.canvas-instruction-cue {
+  position: absolute;
+  bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+}
+
+.spiral-analytics-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.analytics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.analytics-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+html[data-theme="dark"] .analytics-pill {
+  color: var(--text-muted-dark);
+}
+
+.status-indicator {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.status-indicator.normal {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.status-indicator.tremor {
+  background: rgba(255, 87, 34, 0.2);
+  color: #ff5722;
+}
+
+.status-indicator.neutral {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+}
+
+.metrics-gauges-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(24, 28, 27, 0.03);
+  border: 1px solid rgba(24, 28, 27, 0.08);
+  border-radius: var(--radius-sm);
+}
+
+html[data-theme="dark"] .metric-row {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.metric-name {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.metric-val {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.metric-row small {
+  display: none;
+}
+
+.clinical-interpretation-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(85, 230, 204, 0.08);
+  border: 1px solid rgba(85, 230, 204, 0.25);
+  border-radius: var(--radius-sm);
+  color: #38A892;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+html[data-theme="light"] .clinical-interpretation-box {
+  color: #178370;
+  background: rgba(56, 168, 146, 0.08);
+}
+
+.clinical-interpretation-box p {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 6-Axis Multi-Modal Biomarker Radar Card                                   */
+/* -------------------------------------------------------------------------- */
+.biomarker-radar-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 36px;
+  box-shadow: var(--shadow-subtle);
+}
+
+html[data-theme="dark"] .biomarker-radar-card {
+  background: var(--bg-dark-panel);
+  border-color: var(--border-dark);
+}
+
+@media (max-width: 768px) {
+  .biomarker-radar-card {
+    padding: 20px 14px;
+  }
+}
+
+.radar-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.radar-title {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 6px 0 0;
+  color: var(--text-carbon);
+}
+
+html[data-theme="dark"] .radar-title {
+  color: var(--text-dark);
+}
+
+.radar-stage-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.radar-pill {
+  padding: 6px 14px;
+  background: rgba(24, 28, 27, 0.05);
+  border: 1px solid rgba(24, 28, 27, 0.12);
+  border-radius: 16px;
+  color: var(--text-carbon);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html[data-theme="dark"] .radar-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-dark);
+}
+
+.radar-pill:hover {
+  background: rgba(216, 92, 66, 0.1);
+  border-color: var(--signal-orange);
+  color: var(--signal-orange);
+}
+
+.radar-pill.active {
+  background: var(--signal-orange);
+  border-color: var(--signal-orange);
+  color: #fff;
+  font-weight: 600;
+}
+
+.radar-content-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .radar-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.radar-chart-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radar-svg {
+  overflow: visible;
+}
+
+.radar-grid-polygon {
+  fill: none;
+  stroke: rgba(24, 28, 27, 0.12);
+  stroke-width: 1;
+}
+
+html[data-theme="dark"] .radar-grid-polygon {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.radar-axis-line {
+  stroke: rgba(24, 28, 27, 0.12);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+html[data-theme="dark"] .radar-axis-line {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.radar-active-polygon {
+  fill: rgba(216, 92, 66, 0.22);
+  stroke: var(--signal-orange);
+  stroke-width: 2.2;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.radar-vertex-dot {
+  fill: #fff;
+  stroke: var(--signal-orange);
+  stroke-width: 2;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.radar-axis-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  fill: var(--text-muted);
+}
+
+html[data-theme="dark"] .radar-axis-label {
+  fill: var(--text-muted-dark);
+}
+
+.radar-diagnostic-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.radar-status-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.radar-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--signal-orange);
+  background: rgba(216, 92, 66, 0.12);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.radar-concordance-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #38A892;
+}
+
+html[data-theme="dark"] .radar-concordance-pill {
+  color: #55E6CC;
+}
+
+.radar-summary-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+html[data-theme="dark"] .radar-summary-text {
+  color: var(--text-muted-dark);
+}
+
+.biomarker-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.biomarker-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(24, 28, 27, 0.03);
+  border: 1px solid rgba(24, 28, 27, 0.08);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+html[data-theme="dark"] .biomarker-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+
+
