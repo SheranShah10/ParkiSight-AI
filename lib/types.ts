@@ -3,19 +3,18 @@ export type AnatomyFocus = 'overview' | 'caudate' | 'putamen' | 'striatum';
 
 export type ResearchMetric = {
   id: string;
-  name: string;
-  value: string;
-  numericValue: number;
+  label: string;
+  value: number | null;
+  displayValue: string;
   unit: string;
-  dataset: string;
-  cohort: string;
   task: string;
+  dataset: string;
   modelVersion: string;
-  split: string;
-  experimentId: string;
-  sourceReference: string;
-  verificationStatus: 'verified' | 'provisional' | 'illustrative';
-  notes: string;
+  evaluationSplit: string;
+  source: string;
+  verificationStatus: 'verified' | 'manuscript-reported' | 'provisional' | 'illustrative';
+  limitations?: string;
+  methodology?: string;
 };
 
 export type CohortFlowStep = {

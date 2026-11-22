@@ -1,18 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { VERIFIED_BENCHMARKS, COMPARATOR_MODELS } from '@/lib/research-data';
-import { ChartNoAxesCombined, Check, ShieldCheck, ArrowUpRight, HelpCircle, AlertTriangle } from 'lucide-react';
+import { VERIFIED_BENCHMARKS, COMPARATOR_MODELS, RESEARCH_METADATA } from '@/lib/research-data';
+import { ChartNoAxesCombined, Check, ShieldCheck, ArrowUpRight, HelpCircle, AlertTriangle, ChevronDown, ChevronUp, FileText } from 'lucide-react';
+import type { ResearchMetric } from '@/lib/types';
 
 export default function EvidenceExplorer() {
-  const [selectedTask, setSelectedTask] = useState<'staging' | 'severity' | 'sparsity' | 'external' | 'progression'>('staging');
+  const [selectedTaskId, setSelectedTaskId] = useState<string>('staging-balanced-acc');
+  const [methodologyExpanded, setMethodologyExpanded] = useState<boolean>(false);
+
+  const activeMetric: ResearchMetric =
+    VERIFIED_BENCHMARKS.find((m) => m.id === selectedTaskId) || VERIFIED_BENCHMARKS[0];
 
   return (
     <div className="evidence-explorer-container" id="evidence-explorer">
       <div className="evidence-header">
         <div>
-          <span className="scientific-tag">PEER-REVIEWED EVALUATION · HELD-OUT & EXTERNAL COHORTS</span>
-          <h3 className="evidence-main-title">Rigorous Benchmarks Grounded in Data Integrity</h3>
+          <span className="scientific-tag">RESEARCH EVALUATION REGISTRY · HELD-OUT & EXTERNAL COHORTS</span>
+          <h3 className="evidence-main-title">Manuscript-Reported Benchmarks & Provenance</h3>
         </div>
         <div className="provenance-tag">
           <ShieldCheck size={14} /> ZERO PATIENT OVERLAP (PATNO ISOLATED)
@@ -21,143 +26,93 @@ export default function EvidenceExplorer() {
 
       {/* Task Selector Tabs */}
       <div className="task-filter-pills" role="tablist" aria-label="Select evaluation benchmark task">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedTask === 'staging'}
-          className={selectedTask === 'staging' ? 'active' : ''}
-          onClick={() => setSelectedTask('staging')}
-        >
-          01 / 4-Class Staging
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedTask === 'severity'}
-          className={selectedTask === 'severity' ? 'active' : ''}
-          onClick={() => setSelectedTask('severity')}
-        >
-          02 / Motor Severity (R²)
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedTask === 'sparsity'}
-          className={selectedTask === 'sparsity' ? 'active' : ''}
-          onClick={() => setSelectedTask('sparsity')}
-        >
-          03 / Missing SPECT Curve
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedTask === 'external'}
-          className={selectedTask === 'external' ? 'active' : ''}
-          onClick={() => setSelectedTask('external')}
-        >
-          04 / PDBP Zero-Shot
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedTask === 'progression'}
-          className={selectedTask === 'progression' ? 'active' : ''}
-          onClick={() => setSelectedTask('progression')}
-        >
-          05 / Honest Forecasting
-        </button>
+        {VERIFIED_BENCHMARKS.map((metric, idx) => (
+          <button
+            key={metric.id}
+            type="button"
+            role="tab"
+            aria-selected={selectedTaskId === metric.id}
+            className={selectedTaskId === metric.id ? 'active' : ''}
+            onClick={() => {
+              setSelectedTaskId(metric.id);
+              setMethodologyExpanded(false);
+            }}
+          >
+            0{idx + 1} / {metric.label.split(' ')[0]} {metric.label.split(' ')[1] || ''}
+          </button>
+        ))}
       </div>
 
       {/* Hero Metric Banner for Selected Task */}
       <div className="task-hero-display">
-        {selectedTask === 'staging' && (
-          <div className="task-banner-content">
-            <div className="big-stat-block">
-              <span className="stat-label">PPMI HELD-OUT BALANCED ACCURACY</span>
-              <strong className="stat-number">71.11%</strong>
-              <small className="stat-caption">95% Wilson Interval [67.8% – 74.2%] · 728 test visits</small>
-            </div>
-            <div className="stat-context-block">
-              <p>
-                <strong>Why Balanced Accuracy?</strong> Rare stages (such as Stage 3, prevalence 3.6%) are weighted
-                equally with common stages. Standalone 3D CNN achieves only <strong>24.68%</strong> (essentially random
-                chance), proving that imaging requires clinical fusion.
-              </p>
-            </div>
+        <div className="task-banner-content">
+          <div className="big-stat-block">
+            <span className="stat-label">{activeMetric.dataset} · {activeMetric.label.toUpperCase()}</span>
+            <strong className="stat-number">
+              {activeMetric.displayValue}
+            </strong>
+            <small className="stat-caption">{activeMetric.evaluationSplit}</small>
           </div>
-        )}
-
-        {selectedTask === 'severity' && (
-          <div className="task-banner-content">
-            <div className="big-stat-block">
-              <span className="stat-label">CONTINUOUS MOTOR EXPLAINED VARIANCE</span>
-              <strong className="stat-number">0.7256 <small>R²</small></strong>
-              <small className="stat-caption">RMSE = 7.97 points on 0–132 NP3TOT scale</small>
+          <div className="stat-context-block">
+            <div className="metric-meta-badges">
+              <span className="meta-badge-item">Task: {activeMetric.task}</span>
+              <span className="meta-badge-item">Model: {activeMetric.modelVersion}</span>
+              <span className="meta-badge-item status-badge">
+                Status: {activeMetric.verificationStatus}
+              </span>
             </div>
-            <div className="stat-context-block">
-              <p>
-                <strong>Outperforming Tabular Transformers:</strong> ParkiSight matches tuned gradient-boosted trees
-                (0.7300) while exceeding FT-Transformer (0.7015), TabNet (0.6890), and SAINT (0.7084).
+            <p className="metric-primary-methodology">
+              {activeMetric.methodology}
+            </p>
+            {activeMetric.limitations && (
+              <p className="metric-limitation-callout">
+                <strong>Documented Caveat:</strong> {activeMetric.limitations}
               </p>
-            </div>
+            )}
+
+            {/* Expandable Methodology & Provenance Toggle */}
+            <button
+              type="button"
+              className="toggle-methodology-btn"
+              onClick={() => setMethodologyExpanded(!methodologyExpanded)}
+              aria-expanded={methodologyExpanded}
+            >
+              <FileText size={13} />
+              <span>{methodologyExpanded ? 'Hide Provenance & Verification Details' : 'View Full Scientific Provenance'}</span>
+              {methodologyExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            </button>
           </div>
-        )}
+        </div>
 
-        {selectedTask === 'sparsity' && (
-          <div className="task-banner-content">
-            <div className="big-stat-block">
-              <span className="stat-label">RETAINED ACCURACY UNDER 100% MASKING</span>
-              <strong className="stat-number">69.80%</strong>
-              <small className="stat-caption">Decline of only −3.05 percentage points from 0% mask</small>
-            </div>
-            <div className="stat-context-block">
-              <p>
-                <strong>Resilience Without Synthetic Hallucinations:</strong> The learnable prior token <em>M</em> preserves
-                the multimodal latent geometry when DaTSCAN is absent, unlike zero-fill which plummets to 61.24%.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {selectedTask === 'external' && (
-          <div className="task-banner-content">
-            <div className="big-stat-block">
-              <span className="stat-label">PDBP ZERO-SHOT EXTERNAL COHORT</span>
-              <strong className="stat-number">67.84%</strong>
-              <small className="stat-caption">N=1,120 participants · 4,812 encounters · 100% missing SPECT</small>
-            </div>
-            <div className="stat-context-block">
-              <p>
-                <strong>Zero Fine-Tuning Generalization:</strong> Tested on an external multi-center cohort from the
-                NINDS PDBP registry without re-training, proving our model generalizes beyond PPMI institutional bias.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {selectedTask === 'progression' && (
-          <div className="task-banner-content">
-            <div className="big-stat-block">
-              <span className="stat-label">36-MONTH RATE-OF-CHANGE (ΔR²)</span>
-              <strong className="stat-number">+0.0216</strong>
-              <small className="stat-caption">Statistically confirmed signal (ElasticNet +0.0308, FDR q = 0.038)</small>
-            </div>
-            <div className="stat-context-block">
-              <p>
-                <strong>Scientific Honesty Over Hype:</strong> Short horizons (12m and 24m) sit near the measurement
-                noise floor. Naive models claim R² ≈ 0.60 simply because a patient&apos;s score tomorrow is correlated
-                with today. We predict the true annual rate-of-change (ΔNP3TOT).
-              </p>
+        {/* Expandable Methodology Drawer */}
+        {methodologyExpanded && (
+          <div className="methodology-expanded-drawer">
+            <div className="provenance-grid">
+              <div className="provenance-col">
+                <span className="prov-key">SOURCE MANUSCRIPT REFERENCE</span>
+                <strong className="prov-val">{activeMetric.source}</strong>
+                <small>ParkiSight-AI Research Consortium ({RESEARCH_METADATA.year})</small>
+              </div>
+              <div className="provenance-col">
+                <span className="prov-key">COHORT PARTITION PROTOCOL</span>
+                <strong className="prov-val">{activeMetric.evaluationSplit}</strong>
+                <small>Patient-level separation (PATNO isolated)</small>
+              </div>
+              <div className="provenance-col">
+                <span className="prov-key">VERIFICATION STATUS</span>
+                <strong className="prov-val status-val">{activeMetric.verificationStatus.toUpperCase()}</strong>
+                <small>Reproducible experimental artifact</small>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Full Comparator Table */}
+      {/* Full Multi-Model Comparator Table */}
       <div className="comparator-table-panel">
         <div className="table-caption-bar">
           <h5>MODEL COMPARISON ON PPMI HELD-OUT TEST COHORT</h5>
-          <span>70 / 15 / 15 GroupShuffleSplit by PATNO</span>
+          <span>70 / 15 / 15 GroupShuffleSplit by PATNO · Zero Patient Overlap</span>
         </div>
 
         <div className="journal-table" role="table">
@@ -190,7 +145,7 @@ export default function EvidenceExplorer() {
       <div className="evidence-audit-notice">
         <AlertTriangle size={14} />
         <span>
-          <strong>Research Note:</strong> All values above are verified aggregate figures from peer-reviewed experiments. Interactive sliders in the demonstration dashboard produce simulated scenarios for interface evaluation.
+          <strong>Scientific Integrity Disclosure:</strong> All metrics displayed above represent manuscript-reported research evaluation results. They reflect the documented offline evaluation on held-out PPMI and zero-shot PDBP cohorts and are not live patient outputs.
         </span>
       </div>
     </div>
