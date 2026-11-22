@@ -4874,7 +4874,7 @@ input, select, textarea {
 
   /* 3D Brain Canvas Frame & Controls */
   .canvas-frame {
-    height: 520px;
+    height: 560px;
     border-radius: var(--radius-sm);
   }
   .canvas-top-hud {
@@ -4885,47 +4885,68 @@ input, select, textarea {
   .hud-coord {
     display: none;
   }
-  .dossier-toggle-pill {
-    top: 44px;
-    left: 12px;
-    padding: 5px 10px;
-    font-size: 9px;
+  .top-left-pills-row {
+    top: 40px;
+    left: 8px;
+    right: auto;
+    max-width: calc(100% - 130px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 4px;
+    z-index: 28;
+  }
+  .top-left-pills-row::-webkit-scrollbar {
+    display: none;
+  }
+  .dossier-toggle-pill,
+  .camera-reset-pill,
+  .dbs-toggle-pill {
+    top: auto;
+    left: auto;
+    padding: 4px 8px;
+    font-size: 8.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .brain-view-mode-pill {
-    top: 44px;
-    right: 12px;
-    padding: 2px 4px;
-    gap: 3px;
+    top: 40px;
+    right: 8px;
+    padding: 2px 3px;
+    gap: 2px;
+    z-index: 28;
   }
   .view-mode-btn {
-    padding: 4px 8px;
-    font-size: 9px;
+    padding: 3px 6px;
+    font-size: 8.5px;
   }
+  /* Remove intrusive callout banner on mobile so 3D brain is completely unobstructed */
   .explore-striatum-trigger {
-    top: auto;
-    bottom: 120px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 24px);
-    max-width: 320px;
-    justify-content: center;
-    font-size: 9px;
-    padding: 7px 12px;
+    display: none !important;
   }
   .roi-floating-hud {
     top: auto;
-    bottom: 110px;
-    left: 10px;
-    right: 10px;
+    bottom: 56px;
+    left: 8px;
+    right: 8px;
     max-width: none;
-    max-height: 230px;
+    max-height: 180px;
     overflow-y: auto;
-    padding: 10px 12px;
+    padding: 10px 14px;
+    background: rgba(14, 20, 24, 0.96);
+    backdrop-filter: blur(16px);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75);
+    z-index: 35;
   }
   .canvas-bottom-hud {
-    bottom: 60px;
-    left: 12px;
-    right: 12px;
+    bottom: 56px;
+    left: 10px;
+    right: 10px;
+    pointer-events: none;
+  }
+  .canvas-bottom-hud > * {
+    pointer-events: auto;
   }
   .canvas-bottom-hud .hud-left small {
     display: none;
@@ -5040,7 +5061,7 @@ input, select, textarea {
     display: none;
   }
   .canvas-frame {
-    height: 480px;
+    height: 520px;
   }
   .inspect-metrics-grid {
     grid-template-columns: 1fr;

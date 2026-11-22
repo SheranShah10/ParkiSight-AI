@@ -550,29 +550,33 @@ function UnifiedCameraController({
 
     // Dynamic responsive zoom compensation for portrait viewports (mobile phones)
     const aspect = size.width / Math.max(size.height, 1);
-    const zoomComp = aspect < 1.0 ? Math.min(1.45, 1.05 / Math.max(0.65, aspect)) : 1.0;
+    const isMobilePortrait = aspect < 1.0;
+    // Keep brain comfortably sized on phone screens without pushing it too far away
+    const zoomComp = isMobilePortrait ? Math.min(1.25, 1.02 / Math.max(0.72, aspect)) : 1.0;
+    // On portrait mobile, raise vertical targetLook slightly so brain sits clearly above bottom controls
+    const yOffset = isMobilePortrait ? 0.14 : 0.0;
 
-    let targetPos = new THREE.Vector3(2.4 * zoomComp, 1.4 * zoomComp, 4.2 * zoomComp);
-    let targetLook = new THREE.Vector3(0, 0.05, 0);
+    let targetPos = new THREE.Vector3(2.4 * zoomComp, (1.4 + yOffset) * zoomComp, 4.2 * zoomComp);
+    let targetLook = new THREE.Vector3(0, 0.05 + yOffset, 0);
 
     if (focus === 'striatum') {
-      targetPos = new THREE.Vector3(1.7 * zoomComp, 1.05 * zoomComp, 2.4 * zoomComp);
-      targetLook = new THREE.Vector3(0.12, 0.18, 0.12);
+      targetPos = new THREE.Vector3(1.7 * zoomComp, (1.05 + yOffset) * zoomComp, 2.4 * zoomComp);
+      targetLook = new THREE.Vector3(0.12, 0.18 + yOffset, 0.12);
     } else if (focus === 'caudate') {
-      targetPos = new THREE.Vector3(1.15 * zoomComp, 0.95 * zoomComp, 1.7 * zoomComp);
-      targetLook = new THREE.Vector3(0.28, 0.38, 0.35);
+      targetPos = new THREE.Vector3(1.15 * zoomComp, (0.95 + yOffset) * zoomComp, 1.7 * zoomComp);
+      targetLook = new THREE.Vector3(0.28, 0.38 + yOffset, 0.35);
     } else if (focus === 'putamen') {
-      targetPos = new THREE.Vector3(1.65 * zoomComp, 0.65 * zoomComp, 1.55 * zoomComp);
-      targetLook = new THREE.Vector3(0.54, 0.18, 0.12);
+      targetPos = new THREE.Vector3(1.65 * zoomComp, (0.65 + yOffset) * zoomComp, 1.55 * zoomComp);
+      targetLook = new THREE.Vector3(0.54, 0.18 + yOffset, 0.12);
     } else if (focus === 'compare') {
-      targetPos = new THREE.Vector3(0.0, 1.55 * zoomComp, 2.65 * zoomComp);
-      targetLook = new THREE.Vector3(0, 0.18, 0.15);
+      targetPos = new THREE.Vector3(0.0, (1.55 + yOffset) * zoomComp, 2.65 * zoomComp);
+      targetLook = new THREE.Vector3(0, 0.18 + yOffset, 0.15);
     } else if (focus === 'cross-section') {
-      targetPos = new THREE.Vector3(2.6 * zoomComp, 1.8 * zoomComp, 3.2 * zoomComp);
-      targetLook = new THREE.Vector3(0, 0.1, 0);
+      targetPos = new THREE.Vector3(2.6 * zoomComp, (1.8 + yOffset) * zoomComp, 3.2 * zoomComp);
+      targetLook = new THREE.Vector3(0, 0.1 + yOffset, 0);
     } else {
-      targetPos = new THREE.Vector3(2.4 * zoomComp, 1.4 * zoomComp, 4.2 * zoomComp);
-      targetLook = new THREE.Vector3(0, 0.05, 0);
+      targetPos = new THREE.Vector3(2.4 * zoomComp, (1.4 + yOffset) * zoomComp, 4.2 * zoomComp);
+      targetLook = new THREE.Vector3(0, 0.05 + yOffset, 0);
     }
 
     const tSpeed = Math.min(1, delta * 3.4);
@@ -667,9 +671,9 @@ export default function RealBrainScene({
     return () => query.removeEventListener('change', updateMotion);
   }, []);
 
-  // When user actively focuses a specific structure, contextually open the dossier
+  // When user actively focuses a specific structure, contextually open the dossier on desktop only
   useEffect(() => {
-    if (focus !== 'overview') {
+    if (focus !== 'overview' && typeof window !== 'undefined' && window.innerWidth > 768) {
       setShowDossier(true);
     }
   }, [focus]);
@@ -765,14 +769,16 @@ export default function RealBrainScene({
         </button>
       </div>
 
-      {/* Signature Interaction Callout: "Explore the Striatum" (Only in Overview mode) */}
+      {/* Signature Interaction Callout: "Explore the Striatum" (Desktop only, hidden on mobile) */}
       {viewMode === '3d' && focus === 'overview' && (
         <button
           type="button"
           className="explore-striatum-trigger"
           onClick={() => {
             onSelectAnatomy?.('striatum');
-            setShowDossier(true);
+            if (typeof window !== 'undefined' && window.innerWidth > 768) {
+              setShowDossier(true);
+            }
           }}
           title="Zoom inside the brain to reveal the basal ganglia"
         >
