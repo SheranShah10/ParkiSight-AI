@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity, RotateCcw, ScanLine, Eye } from 'lucide-react';
+import { Activity, RotateCcw, ScanLine, Eye, Sparkles, Scissors, ArrowDown } from 'lucide-react';
 import type { AnatomyFocus, SliceMode } from '@/lib/types';
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   onSelectSlice: (slice: SliceMode) => void;
   labelsOn: boolean;
   onToggleLabels: () => void;
+  onScrollToImaging?: () => void;
 };
 
 export default function AnatomyInspector({
@@ -19,6 +20,7 @@ export default function AnatomyInspector({
   onSelectSlice,
   labelsOn,
   onToggleLabels,
+  onScrollToImaging,
 }: Props) {
   return (
     <div className="anatomy-inspector-bar">
@@ -33,8 +35,17 @@ export default function AnatomyInspector({
         </button>
         <button
           type="button"
+          className={`inspector-btn target-btn ${focus === 'striatum' ? 'active' : ''}`}
+          onClick={() => onSelectFocus('striatum')}
+          title="Zoom into bilateral striatum (caudate & putamen)"
+        >
+          <span className="target-dot striatum" /> Striatum
+        </button>
+        <button
+          type="button"
           className={`inspector-btn target-btn ${focus === 'caudate' ? 'active' : ''}`}
           onClick={() => onSelectFocus('caudate')}
+          title="Inspect Caput, Corpus, and Cauda Nuclei Caudati"
         >
           <span className="target-dot caudate" /> Caudate
         </button>
@@ -42,8 +53,17 @@ export default function AnatomyInspector({
           type="button"
           className={`inspector-btn target-btn ${focus === 'putamen' ? 'active' : ''}`}
           onClick={() => onSelectFocus('putamen')}
+          title="Inspect Putamen lentiform nucleus (Primary PD Deficit)"
         >
           <span className="target-dot putamen" /> Putamen
+        </button>
+        <button
+          type="button"
+          className={`inspector-btn target-btn ${focus === 'cross-section' ? 'active' : ''}`}
+          onClick={() => onSelectFocus('cross-section')}
+          title="Hardware cross-section cutaway clipping"
+        >
+          <Scissors size={12} /> Section
         </button>
       </div>
 
@@ -54,7 +74,10 @@ export default function AnatomyInspector({
             key={mode}
             type="button"
             className={`slice-btn ${sliceMode === mode ? 'active' : ''}`}
-            onClick={() => onSelectSlice(mode)}
+            onClick={() => {
+              onSelectSlice(mode);
+              if (focus !== 'cross-section') onSelectFocus('cross-section');
+            }}
           >
             {mode.slice(0, 2).toUpperCase()}
           </button>
@@ -62,13 +85,23 @@ export default function AnatomyInspector({
       </div>
 
       <div className="inspector-actions">
+        {onScrollToImaging && (
+          <button
+            type="button"
+            className="datscan-transition-btn"
+            onClick={onScrollToImaging}
+            title="Correlate with DaTSCAN SPECT imaging in Chapter 02"
+          >
+            <ScanLine size={12} /> DaTSCAN <ArrowDown size={11} />
+          </button>
+        )}
         <button
           type="button"
           className={`toggle-labels-btn ${labelsOn ? 'active' : ''}`}
           onClick={onToggleLabels}
           title="Toggle ROI labels"
         >
-          <Eye size={13} /> {labelsOn ? 'Labels' : 'Mute'}
+          <Eye size={13} /> {labelsOn ? 'HUD' : 'Mute'}
         </button>
         <button
           type="button"

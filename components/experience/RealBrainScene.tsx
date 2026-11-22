@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
-import { Scan, Layers, Info } from 'lucide-react';
+import { Scan, Layers, Info, Sparkles, Scissors, ArrowDown, Eye, RotateCcw } from 'lucide-react';
 import type { AnatomyFocus, SliceMode } from '@/lib/types';
 
 type BrainSceneProps = {
@@ -15,24 +15,29 @@ type BrainSceneProps = {
   active?: boolean;
   focus?: AnatomyFocus;
   onSelectAnatomy?: (focus: AnatomyFocus) => void;
+  onScrollToImaging?: () => void;
 };
 
 /* -------------------------------------------------------------------------- */
-/* Anatomical Cerebral Cortex Geometry with High-Fidelity Gyri/Sulci Folding   */
+/* High-Fidelity Anatomical Cerebral Cortex with Authentic Sulcal Folding     */
 /* -------------------------------------------------------------------------- */
 function AnatomicalHemisphere({
   side,
   focused,
+  sliceMode,
+  isCrossSection,
 }: {
   side: 'left' | 'right';
   focused: AnatomyFocus;
+  sliceMode: SliceMode;
+  isCrossSection: boolean;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const sign = side === 'left' ? -1 : 1;
 
   // Generate stereotaxically proportioned cerebral cortex with multi-octave gyral folding
   const geometry = useMemo(() => {
-    const geo = new THREE.SphereGeometry(1.65, 64, 64);
+    const geo = new THREE.SphereGeometry(1.68, 64, 64);
     const pos = geo.attributes.position;
     const v = new THREE.Vector3();
 
@@ -40,38 +45,38 @@ function AnatomicalHemisphere({
       v.fromBufferAttribute(pos, i);
 
       // MNI152 Stereotactic anatomical proportions
-      v.z *= 1.26; // Anteroposterior elongation (Frontal to Occipital)
-      v.y *= 1.05; // Superior-inferior cranial vault dome
-      v.x *= 0.86; // Lateral compression
+      v.z *= 1.28; // Anteroposterior elongation (Frontal to Occipital)
+      v.y *= 1.06; // Cranial vault dome
+      v.x *= 0.85; // Lateral compression
 
       // Frontal lobe expansion (anterior-superior volume)
       if (v.z > 0.35 && v.y > -0.25) {
-        v.x *= 1.05;
+        v.x *= 1.06;
         v.y *= 1.03;
       }
       // Temporal lobe forward pole (anterior-inferior lateral)
       if (v.z > 0.05 && v.y < -0.32 && Math.abs(v.x) > 0.38) {
-        v.x *= 1.1;
-        v.z *= 1.04;
+        v.x *= 1.12;
+        v.z *= 1.05;
       }
       // Occipital lobe posterior tapering
       if (v.z < -0.65) {
-        v.x *= 0.86;
+        v.x *= 0.85;
         v.y *= 0.92;
       }
 
-      // Sylvian (lateral) fissure anatomical groove
+      // Sylvian (lateral) fissure groove
       const isSylvian = Math.abs(v.y + 0.16) < 0.28 && v.z > -0.32 && v.z < 0.58 && Math.abs(v.x) > 0.55;
-      const sylvianDepression = isSylvian ? -0.09 : 0;
+      const sylvianDepression = isSylvian ? -0.095 : 0;
 
       // Multi-scale cortical gyri and sulci convolutions
-      const primarySulci = Math.sin(v.x * 5.2 + v.y * 3.8) * Math.cos(v.z * 4.4) * 0.075;
-      const secondaryGyri = Math.sin(v.y * 9.6 + v.z * 7.8) * Math.cos(v.x * 8.2) * 0.034;
+      const primarySulci = Math.sin(v.x * 5.2 + v.y * 3.8) * Math.cos(v.z * 4.4) * 0.078;
+      const secondaryGyri = Math.sin(v.y * 9.6 + v.z * 7.8) * Math.cos(v.x * 8.2) * 0.035;
       const tertiaryWrinkles = Math.cos(v.x * 14.5 + v.z * 11.2 + v.y * 10.4) * 0.018;
       const displacement = primarySulci + secondaryGyri + tertiaryWrinkles + sylvianDepression;
 
       // Longitudinal interhemispheric fissure separation
-      if (Math.abs(v.x) < 0.35) {
+      if (Math.abs(v.x) < 0.36) {
         v.x = Math.sign(v.x) * Math.max(0.14, Math.abs(v.x) - 0.08);
       }
 
@@ -82,22 +87,75 @@ function AnatomicalHemisphere({
     return geo;
   }, []);
 
+  // Hardware clipping planes for orthogonal cross-section cutaways
+  const clippingPlanes = useMemo(() => {
+    if (!isCrossSection) return [];
+    if (sliceMode === 'axial') {
+      return [new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.26)];
+    }
+    if (sliceMode === 'coronal') {
+      return [new THREE.Plane(new THREE.Vector3(0, 0, -1), 0.18)];
+    }
+    return [new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0.05)];
+  }, [isCrossSection, sliceMode]);
+
   const isOverview = focused === 'overview';
+  const isStriatum = focused === 'striatum';
+  const isTargeted = focused === 'caudate' || focused === 'putamen';
 
   return (
     <group position={[sign * 0.9, 0.16, 0]}>
       <mesh ref={meshRef} geometry={geometry}>
         <meshPhysicalMaterial
-          color={isOverview ? '#8ba29a' : '#526963'}
-          roughness={0.42}
-          metalness={0.08}
-          transmission={isOverview ? 0.52 : 0.88}
-          thickness={isOverview ? 0.95 : 0.35}
+          color={isOverview ? '#94aaa1' : isCrossSection ? '#a8bbb3' : '#4f6660'}
+          roughness={isOverview ? 0.44 : 0.32}
+          metalness={0.06}
+          transmission={isOverview ? 0.45 : isStriatum ? 0.88 : isTargeted ? 0.92 : 0.2}
+          thickness={isOverview ? 0.85 : 0.3}
           transparent
-          opacity={isOverview ? 0.85 : 0.32}
-          clearcoat={0.45}
+          opacity={isOverview ? 0.88 : isStriatum ? 0.28 : isTargeted ? 0.22 : 0.9}
+          clearcoat={0.35}
           clearcoatRoughness={0.2}
-          depthWrite={isOverview}
+          clippingPlanes={clippingPlanes}
+          clipShadows
+          depthWrite={isOverview || isCrossSection}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Subcortical Thalamic Nuclear Bed (Anatomical Landmark for Basal Ganglia)    */
+/* -------------------------------------------------------------------------- */
+function AnatomicalThalamus({ focused }: { focused: AnatomyFocus }) {
+  const isOverview = focused === 'overview';
+  const isBasalActive = focused === 'striatum' || focused === 'caudate' || focused === 'putamen';
+
+  const thalamusGeo = useMemo(() => {
+    const geo = new THREE.SphereGeometry(0.38, 28, 28);
+    geo.scale(1.0, 0.85, 1.45); // Egg-shaped thalamic nuclear complex
+    return geo;
+  }, []);
+
+  return (
+    <group position={[0, 0.28, -0.05]}>
+      {/* Left Thalamus */}
+      <mesh position={[-0.38, 0, 0]} rotation={[0.1, 0.15, -0.05]} geometry={thalamusGeo}>
+        <meshPhysicalMaterial
+          color="#657b75"
+          roughness={0.52}
+          transparent
+          opacity={isOverview ? 0.5 : isBasalActive ? 0.65 : 0.4}
+        />
+      </mesh>
+      {/* Right Thalamus */}
+      <mesh position={[0.38, 0, 0]} rotation={[0.1, -0.15, 0.05]} geometry={thalamusGeo}>
+        <meshPhysicalMaterial
+          color="#657b75"
+          roughness={0.52}
+          transparent
+          opacity={isOverview ? 0.5 : isBasalActive ? 0.65 : 0.4}
         />
       </mesh>
     </group>
@@ -119,7 +177,6 @@ function SubcorticalBrainstemStructures({ focused }: { focused: AnatomyFocus }) 
       v.x *= 1.45; // Transverse cerebellar width
       v.y *= 0.68; // Flattened
       v.z *= 0.86; // Anteroposterior
-      // Horizontal cerebellar folia grooves
       const folia = Math.sin(v.y * 24.0) * 0.024;
       v.addScaledVector(v.clone().normalize(), folia);
       pos.setXYZ(i, v.x, v.y, v.z);
@@ -171,19 +228,19 @@ function AnatomicalCaudate({
   const sign = side === 'left' ? -1 : 1;
   const meshRef = useRef<THREE.Mesh>(null);
 
-  // Smooth stereotaxic C-curve bordering the lateral ventricle
+  // Stereotactic C-curve bordering the lateral ventricle anterior horn & body
   const curve = useMemo(() => {
     const points = [
-      new THREE.Vector3(sign * 0.36, 0.42, 0.76), // Caput (Anterior head)
+      new THREE.Vector3(sign * 0.36, 0.44, 0.78), // Caput (Anterior head)
       new THREE.Vector3(sign * 0.52, 0.74, 0.32), // Genu / Superior arch
       new THREE.Vector3(sign * 0.62, 0.54, -0.38), // Corpus descending
-      new THREE.Vector3(sign * 0.52, 0.12, -0.78), // Cauda (inferior tail)
+      new THREE.Vector3(sign * 0.52, 0.12, -0.76), // Cauda (inferior tail)
     ];
     return new THREE.CatmullRomCurve3(points);
   }, [sign]);
 
   const geometry = useMemo(() => {
-    return new THREE.TubeGeometry(curve, 48, 0.16, 20, false);
+    return new THREE.TubeGeometry(curve, 54, 0.165, 24, false);
   }, [curve]);
 
   useFrame((state) => {
@@ -199,18 +256,18 @@ function AnatomicalCaudate({
         <meshStandardMaterial
           color={active ? '#FF5722' : '#C45239'}
           emissive={active ? '#FF5722' : '#8A2B14'}
-          emissiveIntensity={active ? 1.7 : 0.65}
+          emissiveIntensity={active ? 1.75 : 0.7}
           roughness={0.22}
           metalness={0.15}
         />
       </mesh>
-      {/* Soft volumetric glow halo */}
+      {/* Soft volumetric dopaminergic glow */}
       {active && (
         <mesh geometry={geometry}>
           <meshBasicMaterial
             color="#FFA726"
             transparent
-            opacity={0.28}
+            opacity={0.3}
             blending={THREE.AdditiveBlending}
           />
         </mesh>
@@ -235,15 +292,15 @@ function AnatomicalPutamen({
   const meshRef = useRef<THREE.Mesh>(null);
 
   const geometry = useMemo(() => {
-    const geo = new THREE.SphereGeometry(0.4, 36, 36);
-    geo.scale(1.22, 0.96, 1.72); // Biconvex anatomical lens
+    const geo = new THREE.SphereGeometry(0.41, 38, 38);
+    geo.scale(1.24, 0.96, 1.74); // Biconvex anatomical lens
     return geo;
   }, []);
 
   useFrame((state) => {
     if (active && meshRef.current) {
       const pulse = 1 + Math.sin(state.clock.elapsedTime * 3.5 + 0.5) * 0.05;
-      meshRef.current.scale.set(1.22 * pulse, 0.96 * pulse, 1.72 * pulse);
+      meshRef.current.scale.set(1.24 * pulse, 0.96 * pulse, 1.74 * pulse);
     }
   });
 
@@ -257,7 +314,7 @@ function AnatomicalPutamen({
         <meshStandardMaterial
           color={active ? '#FF3D00' : '#B8452D'}
           emissive={active ? '#FF3D00' : '#732111'}
-          emissiveIntensity={active ? 1.8 : 0.6}
+          emissiveIntensity={active ? 1.85 : 0.65}
           roughness={0.2}
           metalness={0.18}
         />
@@ -268,7 +325,7 @@ function AnatomicalPutamen({
           <meshBasicMaterial
             color="#FF7043"
             transparent
-            opacity={0.32}
+            opacity={0.34}
             blending={THREE.AdditiveBlending}
           />
         </mesh>
@@ -278,17 +335,19 @@ function AnatomicalPutamen({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Orthogonal Imaging Slice Plane Overlay                                     */
+/* Orthogonal Imaging Slice Plane Guides                                      */
 /* -------------------------------------------------------------------------- */
-function SlicePlaneOverlay({ mode }: { mode: SliceMode }) {
+function SlicePlaneOverlay({ mode, visible }: { mode: SliceMode; visible: boolean }) {
+  if (!visible) return null;
+
   const { position, rotation } = useMemo(() => {
     if (mode === 'axial') {
-      return { position: [0, 0.24, 0] as [number, number, number], rotation: [-Math.PI / 2, 0, 0] as [number, number, number] };
+      return { position: [0, 0.26, 0] as [number, number, number], rotation: [-Math.PI / 2, 0, 0] as [number, number, number] };
     }
     if (mode === 'coronal') {
-      return { position: [0, 0.2, 0.16] as [number, number, number], rotation: [0, 0, 0] as [number, number, number] };
+      return { position: [0, 0.2, 0.18] as [number, number, number], rotation: [0, 0, 0] as [number, number, number] };
     }
-    return { position: [0, 0.2, 0] as [number, number, number], rotation: [0, Math.PI / 2, 0] as [number, number, number] };
+    return { position: [0.05, 0.2, 0] as [number, number, number], rotation: [0, Math.PI / 2, 0] as [number, number, number] };
   }, [mode]);
 
   return (
@@ -298,21 +357,21 @@ function SlicePlaneOverlay({ mode }: { mode: SliceMode }) {
         <meshBasicMaterial
           color="#38A892"
           transparent
-          opacity={0.12}
+          opacity={0.14}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
       </mesh>
       <lineSegments>
         <edgesGeometry args={[new THREE.PlaneGeometry(4.4, 4.4)]} />
-        <lineBasicMaterial color="#55E6CC" transparent opacity={0.5} />
+        <lineBasicMaterial color="#55E6CC" transparent opacity={0.65} />
       </lineSegments>
     </group>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/* Dynamic Camera Rig Controller with Smooth Interpolation                    */
+/* Unified Camera Rig Controller with Smooth Cinematic Interpolation          */
 /* -------------------------------------------------------------------------- */
 function CameraRigController({
   focus,
@@ -327,13 +386,24 @@ function CameraRigController({
     let targetPos = new THREE.Vector3(3.4, 1.8, 4.8);
     let targetLook = new THREE.Vector3(0, 0, 0);
 
-    if (focus === 'caudate') {
-      targetPos = new THREE.Vector3(2.1, 1.4, 3.2);
-      targetLook = new THREE.Vector3(0.48, 0.42, 0.28);
+    if (focus === 'striatum') {
+      // Zoom toward deep basal ganglia center
+      targetPos = new THREE.Vector3(2.3, 1.3, 3.1);
+      targetLook = new THREE.Vector3(0.4, 0.32, 0.2);
+    } else if (focus === 'caudate') {
+      // Direct focus on right caudate nucleus
+      targetPos = new THREE.Vector3(1.8, 1.25, 2.3);
+      targetLook = new THREE.Vector3(0.42, 0.44, 0.35);
     } else if (focus === 'putamen') {
-      targetPos = new THREE.Vector3(2.8, 1.1, 2.7);
-      targetLook = new THREE.Vector3(0.82, 0.24, 0.16);
+      // Direct focus on right putamen lentiform nucleus
+      targetPos = new THREE.Vector3(2.4, 0.95, 2.0);
+      targetLook = new THREE.Vector3(0.82, 0.22, 0.16);
+    } else if (focus === 'cross-section') {
+      // Orthogonal perspective for sliced view
+      targetPos = new THREE.Vector3(3.2, 2.4, 3.8);
+      targetLook = new THREE.Vector3(0, 0.15, 0);
     } else {
+      // Smooth scroll-linked orbital angle in Overview mode
       const yaw = Math.sin(progress * Math.PI) * 0.75;
       const pitch = 1.35 + Math.cos(progress * Math.PI * 1.5) * 0.38;
       targetPos = new THREE.Vector3(
@@ -343,7 +413,7 @@ function CameraRigController({
       );
     }
 
-    camera.position.lerp(targetPos, Math.min(1, delta * 3.4));
+    camera.position.lerp(targetPos, Math.min(1, delta * 3.6));
     camera.lookAt(targetLook);
   });
 
@@ -351,7 +421,7 @@ function CameraRigController({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Main 3D Brain Scene Component                                              */
+/* Main 3D Brain Scene Component — ParkiSight AI 4.0                          */
 /* -------------------------------------------------------------------------- */
 export default function RealBrainScene({
   progress = 0,
@@ -361,6 +431,7 @@ export default function RealBrainScene({
   active = true,
   focus = 'overview',
   onSelectAnatomy,
+  onScrollToImaging,
 }: BrainSceneProps) {
   const [hasWebGL, setHasWebGL] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -381,6 +452,8 @@ export default function RealBrainScene({
     query.addEventListener('change', updateMotion);
     return () => query.removeEventListener('change', updateMotion);
   }, []);
+
+  const isCrossSection = focus === 'cross-section';
 
   return (
     <div className="canvas-wrapper" style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -404,22 +477,70 @@ export default function RealBrainScene({
         </button>
       </div>
 
+      {/* Signature Interaction Callout: "Explore the Striatum" (Only in Overview mode) */}
+      {viewMode === '3d' && focus === 'overview' && (
+        <button
+          type="button"
+          className="explore-striatum-trigger"
+          onClick={() => onSelectAnatomy?.('striatum')}
+          title="Zoom inside the brain to reveal the basal ganglia"
+        >
+          <Sparkles size={12} className="spin-slow" />
+          <span>EXPLORE THE STRIATUM (BASAL GANGLIA)</span>
+          <span className="pill-arrow">→</span>
+        </button>
+      )}
+
       {/* Floating 2D HUD Card for Stereotaxic ROI (Always Crisp, Zero 3D Text Distortion) */}
       {labelsOn && (
         <div className={`roi-floating-hud ${focus !== 'overview' ? 'is-focused' : ''}`}>
+          {focus === 'overview' && (
+            <>
+              <div className="roi-hud-header">
+                <span className="roi-badge overview">MNI152 STEREOTAXY</span>
+                <span className="roi-mni">1.0 mm Isotropic</span>
+              </div>
+              <div className="roi-hud-title">Cerebral Cortex & Striatum</div>
+              <div className="roi-hud-desc">
+                Whole-brain volumetric reconstruction displaying frontal, temporal, parietal, and occipital lobes with deep basal ganglia integration.
+              </div>
+              <div className="roi-hud-meta">
+                <span>Left Drag: Orbit</span>
+                <span>Scroll: Zoom</span>
+              </div>
+            </>
+          )}
+
+          {focus === 'striatum' && (
+            <>
+              <div className="roi-hud-header">
+                <span className="roi-badge striatum">DEEP BASAL GANGLIA</span>
+                <span className="roi-mni">Striatal Subcortex</span>
+              </div>
+              <div className="roi-hud-title">The Striatum (Caudate & Putamen)</div>
+              <div className="roi-hud-desc">
+                Cortex rendered translucent. The striatum serves as the critical entry gate for dopaminergic projections from the substantia nigra pars compacta.
+              </div>
+              <div className="roi-hud-meta">
+                <span className="roi-highlight-green">Bilateral Architecture</span>
+                <span className="roi-highlight-danger">PD Degeneration Focus</span>
+              </div>
+            </>
+          )}
+
           {focus === 'caudate' && (
             <>
               <div className="roi-hud-header">
                 <span className="roi-badge caudate">STEREOTAXIC ROI</span>
                 <span className="roi-mni">MNI (±14, +10, +8) mm</span>
               </div>
-              <div className="roi-hud-title">Caput Nuclei Caudati (Head of Caudate)</div>
+              <div className="roi-hud-title">Caput, Corpus & Cauda Nuclei Caudati</div>
               <div className="roi-hud-desc">
-                C-shaped subcortical gray matter bordering the lateral ventricles. Coordinates associative frontostriatal circuits and habit planning.
+                Arched C-shaped subcortical structure bordering the lateral ventricles. Coordinates associative frontostriatal circuits and habit planning.
               </div>
               <div className="roi-hud-meta">
                 <span>Volume: ~3,240 mm³</span>
-                <span className="roi-highlight-green">Baseline SBR: 2.48 (Preserved)</span>
+                <span className="roi-highlight-green">Baseline SBR: 2.48 (Relative Preservation)</span>
               </div>
             </>
           )}
@@ -441,21 +562,34 @@ export default function RealBrainScene({
             </>
           )}
 
-          {focus === 'overview' && (
+          {focus === 'cross-section' && (
             <>
               <div className="roi-hud-header">
-                <span className="roi-badge overview">MNI152 STEREOTAXY</span>
-                <span className="roi-mni">1.0 mm Isotropic</span>
+                <span className="roi-badge cross-section">ANATOMICAL CUTAWAY</span>
+                <span className="roi-mni">{sliceMode.toUpperCase()} PLANE</span>
               </div>
-              <div className="roi-hud-title">Cerebral Cortex & Bilateral Striatum</div>
+              <div className="roi-hud-title">Radiological Cross-Section</div>
               <div className="roi-hud-desc">
-                Volumetric reconstruction showing outer cortical lobes (frontal, temporal, parietal, occipital) and deep basal ganglia structures.
+                Hardware-accelerated cutting plane slicing through cerebral cortex to expose deep ventricular spaces and basal ganglia nuclear boundaries.
               </div>
               <div className="roi-hud-meta">
-                <span>Orbit: Click & Drag</span>
-                <span>Select ROI: Caudate / Putamen below</span>
+                <span>Plane: {sliceMode.toUpperCase()}</span>
+                <span>Switch plane below (AX/CO/SA)</span>
               </div>
             </>
+          )}
+
+          {/* Quick DaTSCAN SPECT Transition Button */}
+          {onScrollToImaging && (
+            <button
+              type="button"
+              className="roi-datscan-link-btn"
+              onClick={onScrollToImaging}
+              title="Jump to Scene 02 for empirical DaTSCAN SPECT analysis"
+            >
+              <span>Correlate with DaTSCAN SPECT</span>
+              <ArrowDown size={11} />
+            </button>
           )}
         </div>
       )}
@@ -468,6 +602,7 @@ export default function RealBrainScene({
           gl={{
             antialias: true,
             alpha: true,
+            localClippingEnabled: true, // Enable hardware clipping planes for cross-section cutaways
             powerPreference: 'high-performance',
           }}
         >
@@ -488,28 +623,60 @@ export default function RealBrainScene({
 
           <Suspense fallback={null}>
             <group position={[0, 0, 0]}>
-              {/* Left & Right Cerebral Hemispheres (Authentic Sulcal Convolutions) */}
-              <AnatomicalHemisphere side="left" focused={focus} />
-              <AnatomicalHemisphere side="right" focused={focus} />
+              {/* Left & Right Cerebral Hemispheres with Sulcal Gyri Folding */}
+              <AnatomicalHemisphere
+                side="left"
+                focused={focus}
+                sliceMode={sliceMode}
+                isCrossSection={isCrossSection}
+              />
+              <AnatomicalHemisphere
+                side="right"
+                focused={focus}
+                sliceMode={sliceMode}
+                isCrossSection={isCrossSection}
+              />
+
+              {/* Subcortical Thalamic Nuclear Complex */}
+              <AnatomicalThalamus focused={focus} />
 
               {/* Cerebellum & Brainstem */}
               <SubcorticalBrainstemStructures focused={focus} />
 
               {/* Bilateral Striatum (Caudate & Putamen) */}
-              <AnatomicalCaudate side="left" active={focus === 'caudate'} onClick={() => onSelectAnatomy?.('caudate')} />
-              <AnatomicalCaudate side="right" active={focus === 'caudate'} onClick={() => onSelectAnatomy?.('caudate')} />
-              <AnatomicalPutamen side="left" active={focus === 'putamen'} onClick={() => onSelectAnatomy?.('putamen')} />
-              <AnatomicalPutamen side="right" active={focus === 'putamen'} onClick={() => onSelectAnatomy?.('putamen')} />
+              <AnatomicalCaudate
+                side="left"
+                active={focus === 'striatum' || focus === 'caudate'}
+                onClick={() => onSelectAnatomy?.('caudate')}
+              />
+              <AnatomicalCaudate
+                side="right"
+                active={focus === 'striatum' || focus === 'caudate'}
+                onClick={() => onSelectAnatomy?.('caudate')}
+              />
+              <AnatomicalPutamen
+                side="left"
+                active={focus === 'striatum' || focus === 'putamen'}
+                onClick={() => onSelectAnatomy?.('putamen')}
+              />
+              <AnatomicalPutamen
+                side="right"
+                active={focus === 'striatum' || focus === 'putamen'}
+                onClick={() => onSelectAnatomy?.('putamen')}
+              />
 
-              {/* Orthogonal Slice Plane */}
-              <SlicePlaneOverlay mode={sliceMode} />
+              {/* Orthogonal Slice Plane Guide */}
+              <SlicePlaneOverlay mode={sliceMode} visible={isCrossSection} />
             </group>
           </Suspense>
 
           <OrbitControls
-            enableZoom={false}
+            enableZoom={true}
             enablePan={false}
             rotateSpeed={0.45}
+            zoomSpeed={0.65}
+            minDistance={1.8}
+            maxDistance={8.5}
             maxPolarAngle={Math.PI / 1.7}
             minPolarAngle={Math.PI / 3.4}
           />

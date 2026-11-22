@@ -5310,3 +5310,134 @@ input, select, textarea {
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+
+/* ==========================================================================
+   PARKISIGHT AI 4.0 — 3D BRAIN EXPLORER HUD & SIGNATURE STRIATUM INTERACTION
+   ========================================================================== */
+
+/* Signature Callout: Explore the Striatum */
+.explore-striatum-trigger {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  z-index: 28;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(14, 20, 24, 0.9);
+  border: 1px solid var(--signal-orange);
+  border-radius: 20px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 14px rgba(216, 92, 66, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: pulseStriatumGlow 3s infinite ease-in-out;
+}
+
+.explore-striatum-trigger:hover {
+  background: var(--signal-orange);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(216, 92, 66, 0.6);
+}
+
+.pill-arrow {
+  font-size: 13px;
+  transition: transform 0.2s ease;
+}
+
+.explore-striatum-trigger:hover .pill-arrow {
+  transform: translateX(3px);
+}
+
+@keyframes pulseStriatumGlow {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(216, 92, 66, 0.25);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(216, 92, 66, 0.55);
+  }
+}
+
+.spin-slow {
+  animation: spinSlow 8s linear infinite;
+  color: var(--signal-orange);
+}
+
+.explore-striatum-trigger:hover .spin-slow {
+  color: #fff;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Badge colors for 4.0 */
+.roi-badge.striatum {
+  background: rgba(255, 112, 67, 0.25);
+  color: #FF7043;
+}
+
+.roi-badge.cross-section {
+  background: rgba(85, 230, 204, 0.2);
+  color: #55E6CC;
+}
+
+.target-dot.striatum {
+  background: #FF7043;
+  box-shadow: 0 0 6px rgba(255, 112, 67, 0.8);
+}
+
+/* Quick DaTSCAN SPECT Transition Button inside HUD */
+.roi-datscan-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  color: #55E6CC;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+
+.roi-datscan-link-btn:hover {
+  background: rgba(85, 230, 204, 0.15);
+  border-color: #55E6CC;
+  color: #fff;
+}
+
+/* Inspector Bar DaTSCAN Button */
+.datscan-transition-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  height: 28px;
+  background: rgba(85, 230, 204, 0.1);
+  border: 1px solid rgba(85, 230, 204, 0.3);
+  border-radius: var(--radius-sm);
+  color: #55E6CC;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.datscan-transition-btn:hover {
+  background: rgba(85, 230, 204, 0.22);
+  color: #fff;
+}

@@ -62,6 +62,11 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToImaging = () => {
+    const el = document.getElementById('imaging');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="neural-archive-root" suppressHydrationWarning>
       {/* Global Grain Texture Overlay */}
@@ -150,6 +155,7 @@ export default function Home() {
                     active={true}
                     focus={anatomyFocus}
                     onSelectAnatomy={(f) => setAnatomyFocus(f)}
+                    onScrollToImaging={scrollToImaging}
                   />
                 </div>
 
@@ -161,6 +167,7 @@ export default function Home() {
                   onSelectSlice={setSliceMode}
                   labelsOn={labelsOn}
                   onToggleLabels={() => setLabelsOn(!labelsOn)}
+                  onScrollToImaging={scrollToImaging}
                 />
 
                 <div className="canvas-bottom-hud">
