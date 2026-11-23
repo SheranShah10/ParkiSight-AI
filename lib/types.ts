@@ -47,4 +47,25 @@ export type DemoInferenceResult = {
   gateWeight: number;
   latencyMs: number;
   activeRoute: 'multimodal' | 'prior-token';
+  predictedStage?: number;
+  stageName?: string;
+  progressionDeltas?: {
+    '12Month': number;
+    '24Month': number;
+    '36Month': number;
+  };
+  topBiomarkers?: Array<{
+    feature: string;
+    impact: number;
+  }>;
+  modelVersion?: string;
+  modelConnection?: string;
+  validationMetrics?: {
+    stageF1: number;
+    balancedAccuracy: number;
+    motorR2: number;
+    motorRMSE: number;
+  };
 };
+
+export type ModelInferenceResult = DemoInferenceResult;

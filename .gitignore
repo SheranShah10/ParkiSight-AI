@@ -4,3 +4,10 @@ node_modules/
 output/
 .DS_Store
 *.log
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+.env.local

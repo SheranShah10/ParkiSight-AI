@@ -7184,3 +7184,20 @@ html[data-theme="dark"] .biomarker-item {
 
 
 
+
+/* Production Connected Banner Styles */
+.production-connected-banner {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+.production-pill {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.live-pulse {
+  background: #ffffff !important;
+  box-shadow: 0 0 8px #34d399;
+}
